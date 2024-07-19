@@ -26,11 +26,7 @@ namespace MicroRenamerWPF
     }
       
 
-    private void btnOpenFolderDir1_Click(object sender, RoutedEventArgs e)
-    {
-      //gets the selected folder path
-      getFolderPath(txtDirectory1);  
-    }
+
 
     private void getFolderPath(TextBox txtBox) {
 
@@ -56,16 +52,9 @@ namespace MicroRenamerWPF
 
     }
 
-    private void btnOpenFolderDir2_Click(object sender, RoutedEventArgs e)
-    {
-      //gets the selected folder path
-      getFolderPath(txtDirectory2);
-    }
+  
 
-    private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
-    {
-      RenameFiles(txtDirectory1);
-    }
+   
 
     private void RenameFiles(TextBox txtFolder){
 
@@ -401,22 +390,34 @@ namespace MicroRenamerWPF
         MessageBox.Show("Please close any open files to delete them");
         DeleteFilesInDirectory(directoryPath);
       }
-
-    }
-    private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
-    {
-      renameVB(txtDirectory1.Text);
-
     }
 
-    private void btnRecycleDir1_Click(object sender, RoutedEventArgs e)
-    {
 
+    private void btnOpenFolderDir1_Click(object sender, RoutedEventArgs e)
+    {
+      //gets the selected folder path
+      getFolderPath(txtDirectory1);
+    }
+
+    private void btnOpenFolderDir2_Click(object sender, RoutedEventArgs e)
+    {
+      //gets the selected folder path
+      getFolderPath(txtDirectory2);
+    }
+
+    private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
+    {
+      RenameFiles(txtDirectory1);
     }
 
     private void btnRenameDir2_Click(object sender, RoutedEventArgs e)
     {
+      RenameFiles(txtDirectory2);
+    }
 
+    private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
+    {
+      renameVB(txtDirectory1.Text);
     }
 
     private void btnTitleCaseDir2_Click(object sender, RoutedEventArgs e)
@@ -424,24 +425,31 @@ namespace MicroRenamerWPF
       renameVB(txtDirectory2.Text);
     }
 
+    private void btnRecycleDir1_Click(object sender, RoutedEventArgs e)
+    {
+      DeleteFilesInDirectory(txtDirectory1.Text);
+    }
     private void btnRecycleDir2_Click(object sender, RoutedEventArgs e)
     {
-
+      DeleteFilesInDirectory(txtDirectory2.Text);
     }
 
     private void btnRecycleBoth_Click(object sender, RoutedEventArgs e)
     {
-
+      DeleteFilesInDirectory(txtDirectory1.Text);
+      DeleteFilesInDirectory(txtDirectory2.Text);
     }
 
     private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
     {
-
+      txtNotepad1.SelectAll();
+      txtNotepad1.Copy();
     }
 
     private void btnCopyNotepad2_Click(object sender, RoutedEventArgs e)
     {
-
+      txtNotepad2.SelectAll();
+      txtNotepad2.Copy();
     }
 
     private void btnCopyPresetClipboard1_Click(object sender, RoutedEventArgs e)
@@ -460,22 +468,24 @@ namespace MicroRenamerWPF
 
     private void btnPasteNotepad1_Click(object sender, RoutedEventArgs e)
     {
-
+      string cb = Clipboard.GetText();
+      txtNotepad1.Text = cb;
     }
 
     private void btnPasteNotepad2_Click(object sender, RoutedEventArgs e)
     {
-
+      string cb = Clipboard.GetText();
+      txtNotepad2.Text = cb;
     }
 
     private void btnClearNotepad1_Click(object sender, RoutedEventArgs e)
     {
-
+      txtNotepad1.Clear();
     }
 
     private void btnClearNotepad2_Click(object sender, RoutedEventArgs e)
     {
-
+      txtNotepad2.Clear();
     }
   }
 }

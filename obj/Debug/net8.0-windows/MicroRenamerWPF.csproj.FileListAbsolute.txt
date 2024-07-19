@@ -13,6 +13,7 @@ E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.AssemblyInfoInputs.cache
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.AssemblyInfo.cs
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.csproj.CoreCompileInputs.cache
+E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.sourcelink.json
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.dll
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\refint\MicroRenamerWPF.dll
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.pdb
