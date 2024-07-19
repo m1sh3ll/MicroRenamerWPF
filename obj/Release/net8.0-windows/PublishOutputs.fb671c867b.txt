@@ -1,0 +1,5 @@
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.exe
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.dll
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.deps.json
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.runtimeconfig.json
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.pdb

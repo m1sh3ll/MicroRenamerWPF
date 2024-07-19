@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="bg.jpg" />
+    <None Remove="dgf-gdfgf-dg.jpg" />
+    <None Remove="Untitled picture.png" />
+    <None Remove="Untitled-picture.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="bg.jpg" />
+    <Resource Include="dgf-gdfgf-dg.jpg" />
+    <Resource Include="Untitled picture.png" />
+    <Resource Include="Untitled-picture.jpg" />
+  </ItemGroup>
+
+</Project>

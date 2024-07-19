@@ -1,0 +1,481 @@
+﻿using System.Globalization;
+using System.IO;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Documents;
+
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace MicroRenamerWPF
+{
+  /// <summary>
+  /// Interaction logic for MainWindow.xaml
+  /// </summary>
+  public partial class MainWindow : Window
+  {
+    public MainWindow()
+    {
+      InitializeComponent();
+    }
+      
+
+    private void btnOpenFolderDir1_Click(object sender, RoutedEventArgs e)
+    {
+      //gets the selected folder path
+      getFolderPath(txtDirectory1);  
+    }
+
+    private void getFolderPath(TextBox txtBox) {
+
+      //This function sets the selected folder path as the text in the directory text box
+
+      Microsoft.Win32.OpenFolderDialog dialog = new();
+
+      dialog.Multiselect = false;
+      dialog.Title = "Select a folder";
+
+      // Show open folder dialog box
+      bool? result = dialog.ShowDialog();
+
+      string fullPathToFolder = "";
+      // Process open folder dialog box results
+      if (result == true)
+      {
+        // Get the selected folder
+        fullPathToFolder = dialog.FolderName;
+      }
+
+      txtBox.Text = fullPathToFolder;
+
+    }
+
+    private void btnOpenFolderDir2_Click(object sender, RoutedEventArgs e)
+    {
+      //gets the selected folder path
+      getFolderPath(txtDirectory2);
+    }
+
+    private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
+    {
+      RenameFiles(txtDirectory1);
+    }
+
+    private void RenameFiles(TextBox txtFolder){
+
+      if (chkAddDate.IsChecked == true || chkAddText.IsChecked == true)
+      {
+        renameWithDateAndText(txtFolder.Text);
+      }
+      if (chkRemoveSpecial.IsChecked == true)
+      {
+        renameSpecial(txtFolder.Text);
+      }
+      if (chkNumberItems.IsChecked == true)
+      {
+        renameNumbers(txtFolder.Text);
+      }
+    }
+
+    private void renameWithDateAndText(string folder){
+      // Check if the directory exists
+      if (Directory.Exists(folder))
+      {
+        // Get all files in the directory
+        string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+
+        // Iterate through each file
+        foreach (string filePath in files)
+        {
+          try
+          {
+            // Extract the file name and extension           
+            string fileExtension = System.IO.Path.GetExtension(filePath);
+            fileExtension = fileExtension.ToLower();
+            if (fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip")
+            {
+              string a = "", b = "";
+              string todaysDate = "";
+
+              //Add text if the option is selected
+              if (chkAddText.IsChecked == true)
+              {
+                if (txtAddText.Text != "")
+                {
+                  a = txtAddText.Text;
+                  b = "-";
+                }
+              }
+
+              //Add date if the option is selected
+              if (chkAddDate.IsChecked == true)
+              {
+
+                todaysDate = string.Concat(DateTime.Now.Month.ToString("D2"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("yy"), "-");
+              }
+              string newFileName = string.Concat(todaysDate, a, b, System.IO.Path.GetFileName(filePath));
+
+
+              newFileName = newFileName.ToLower();
+              newFileName = newFileName.Replace("main", "MAIN");
+              newFileName = newFileName.Replace("lead", "LEAD");
+              newFileName = newFileName.Replace("slider", "SLIDER");
+
+              if (txtRemoveText.Text.Length > 0)
+              {
+                string txtremove = txtRemoveText.Text.ToLower();
+                newFileName = newFileName.Replace(txtremove, "");
+              }
+              // Combine the new file name with the original directory
+              string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
+
+              // Rename the file
+              File.Move(filePath, newFilePath);
+            }
+
+          }
+          catch (Exception ex)
+          {
+            MessageBox.Show($"Error renaming file: {ex.Message}");
+          }
+        }
+      }
+      else
+      {
+        MessageBox.Show("Downloads directory does not exist.");
+      }
+      txtAddText.Clear();
+
+
+    }
+
+    private void renameSpecial(string folder) {
+     
+
+      // Check if the directory exists
+      if (Directory.Exists(folder))
+      {
+        // Get all files in the directory
+        string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+
+        // Iterate through each file
+        foreach (string filePath in files)
+        {
+          try
+          {
+            // Extract the file name and extension
+            string fileName = System.IO.Path.GetFileName(filePath);
+            string fileExtension = System.IO.Path.GetExtension(filePath);
+            fileExtension = fileExtension.ToLower();
+            if (fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip" && (fileExtension == ".jpg" ||
+            fileExtension == ".jpeg" || fileExtension == "heic" || fileExtension == ".png" || fileExtension == ".pdf"))
+            {
+              string newFileName = fileName.Replace(fileExtension, "");
+
+              newFileName = newFileName.Replace("&", "_");
+              newFileName = newFileName.Replace("img", "");
+              newFileName = newFileName.Replace("image", "");
+              newFileName = newFileName.Replace("dsc", "");
+              newFileName = newFileName.Replace("unknown", "");
+              newFileName = newFileName.Replace("unnamed", "");
+              newFileName = newFileName.Replace("untitled", "");
+              newFileName = newFileName.Replace("screenshot", "");
+              newFileName = newFileName.Replace("picture", "");
+              newFileName = newFileName.Replace("photo", "");
+              newFileName = newFileName.Replace(" ", "_");
+              newFileName = newFileName.Replace(".", "");
+              newFileName = newFileName.Replace("(", "");
+              newFileName = newFileName.Replace("docx", "");
+              newFileName = newFileName.Replace("pptx", "");
+              newFileName = newFileName.Replace("copy", "");
+              newFileName = newFileName.Replace(")", "");
+              newFileName = newFileName.Replace("[", "");
+              newFileName = newFileName.Replace("]", "");
+              newFileName = newFileName.Replace("’", "");
+              newFileName = newFileName.Replace("_-_", "-");
+              newFileName = newFileName.Replace("~", "");
+              newFileName = newFileName.Replace(",", "");
+              newFileName = newFileName.Replace("‘", "");
+              newFileName = newFileName.Replace("#", "");
+              newFileName = newFileName.Replace("'", "");
+              newFileName = newFileName.Replace("-_", "-");
+              newFileName = newFileName.Replace("_-", "-");
+              newFileName = newFileName.Replace("--", "-");
+              newFileName = newFileName.Replace("__", "_");
+              newFileName = newFileName.Replace("__", "_");
+
+              newFileName = newFileName.ToLower();
+
+              fileExtension = fileExtension.ToLower();
+              fileExtension = fileExtension.Replace("jpeg", "jpg");
+              fileExtension = fileExtension.Replace("heic", "jpg");
+              fileExtension = fileExtension.Replace("png", "jpg");
+              newFileName = newFileName.Replace("main", "MAIN");
+              newFileName = newFileName.Replace("lead", "LEAD");
+              newFileName = newFileName.Replace("slider", "SLIDER");
+
+              newFileName = newFileName + fileExtension;
+
+              if (chkMaxLength45.IsChecked == true)
+              {
+                if (newFileName.Length > 45)
+                {
+                  newFileName = newFileName.Replace("_", "");
+                  newFileName = newFileName.Replace("-", "");
+
+                  if (newFileName.Length > 45)
+                  {
+                    MessageBox.Show($"Warning: Too long filename - newfilename {newFileName} is {newFileName.Length} characters. Charcount must be under 45. ");
+                  }
+                }
+              }
+
+              // Combine the new file name with the original directory
+              string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
+
+              // Rename the file
+              File.Move(filePath, newFilePath);
+            }
+          }
+          catch
+          {
+          }
+        }
+      }
+      else
+      {
+        MessageBox.Show("Downloads directory does not exist.");
+      }
+    }
+
+    private void renameNumbers(string folder)
+    {
+
+      // Check if the directory exists
+      if (Directory.Exists(folder))
+      {
+        // Get all files in the directory
+        string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+        int i = 0;
+        // Iterate through each file
+        foreach (string filePath in files)
+        {
+
+          try
+          {
+            // Extract the file name and extension           
+            string fileExtension = System.IO.Path.GetExtension(filePath);
+            string newFileName = System.IO.Path.GetFileName(filePath);
+            fileExtension = fileExtension.ToLower();
+
+            if (fileExtension != ".pdf" && fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip")
+            {
+              // Construct the new file name
+              newFileName = string.Concat(newFileName, "-", ++i);
+              newFileName = newFileName.Replace(fileExtension, "");
+              newFileName += fileExtension;
+              newFileName = newFileName.ToLower();
+              newFileName = newFileName.Replace("--", "-");
+              newFileName = newFileName.Replace("main", "MAIN");
+              newFileName = newFileName.Replace("lead", "LEAD");
+              newFileName = newFileName.Replace("slider", "SLIDER");
+              // Combine the new file name with the original directory
+              string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
+
+              // Rename the file
+              File.Move(filePath, newFilePath);
+            }
+          }
+          catch (Exception ex)
+          {
+            MessageBox.Show($"Error renaming file: {ex.Message}");
+          }
+        }
+      }
+      else
+      {
+        MessageBox.Show("Downloads directory does not exist.");
+      }
+    }
+
+    private void renameVB(string folder)
+    {
+      string folderPath = folder;
+
+
+      if (Directory.Exists(folderPath))
+      {
+
+        string[] files = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
+
+
+        foreach (string filePath in files)
+        {
+          try
+          {
+
+            string fileName = System.IO.Path.GetFileName(filePath);
+            string fileExtension = System.IO.Path.GetExtension(filePath);
+            fileExtension = fileExtension.ToLower();
+
+            if (fileExtension == ".pdf")
+            {
+              // Construct the new file name
+              string newFileName = fileName.Replace(fileExtension, "");
+              newFileName = newFileName.Replace("&", "_");
+              newFileName = newFileName.Replace("’", "_");
+              newFileName = newFileName.Replace(".", "_");
+              newFileName = newFileName.Replace("docx", "");
+              newFileName = newFileName.Replace("pptx", "");
+              newFileName = newFileName.Replace("copy", "");
+              newFileName = newFileName.Replace("(", "_");
+              newFileName = newFileName.Replace(")", "_");
+              newFileName = newFileName.Replace("]", "_");
+              newFileName = newFileName.Replace("‘", "_");
+              newFileName = newFileName.Replace("[", "_");
+              newFileName = newFileName.Replace(",", "_");
+              newFileName = newFileName.Replace("#", "_");
+              newFileName = newFileName.Replace("~", "_");
+              newFileName = newFileName.Replace("'", "_");
+              newFileName = newFileName.Replace("__", "_");
+              newFileName = newFileName.Replace("__", "_");
+              newFileName = newFileName.Replace("-", "_");
+              newFileName = newFileName.Replace("_", " ");
+              newFileName = newFileName.Replace("  ", " ");
+              newFileName = newFileName.Replace("  ", " ");
+              newFileName = newFileName.ToLower();
+              TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+              newFileName = textInfo.ToTitleCase(newFileName);
+
+
+              fileExtension = fileExtension.ToLower();
+
+              newFileName = newFileName + fileExtension;
+              // Combine the new file name with the original directory
+              string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
+
+              // Rename the file
+              File.Move(filePath, newFilePath);
+            }
+          }
+          catch
+          {
+
+          }
+        }
+      }
+      else
+      {
+        MessageBox.Show("Downloads directory does not exist.");
+      }
+    }
+
+
+    private void DeleteFilesInDirectory(string directoryPath)
+    {
+      try
+      {
+        // Check if the directory exists
+        if (Directory.Exists(directoryPath))
+        {
+          // Delete all files in the directory
+          foreach (string filePath in Directory.GetFiles(directoryPath))
+          {
+            File.Delete(filePath);
+          }
+          // Recursively delete files in subdirectories
+          foreach (string subDirectoryPath in Directory.GetDirectories(directoryPath))
+          {
+            DeleteFilesInDirectory(subDirectoryPath);
+          }
+        }
+      }
+      catch
+      {
+        MessageBox.Show("Please close any open files to delete them");
+        DeleteFilesInDirectory(directoryPath);
+      }
+
+    }
+    private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
+    {
+      renameVB(txtDirectory1.Text);
+
+    }
+
+    private void btnRecycleDir1_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnRenameDir2_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnTitleCaseDir2_Click(object sender, RoutedEventArgs e)
+    {
+      renameVB(txtDirectory2.Text);
+    }
+
+    private void btnRecycleDir2_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnRecycleBoth_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnCopyNotepad2_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnCopyPresetClipboard1_Click(object sender, RoutedEventArgs e)
+    {
+    //copy the text in the box 1 to the clipboard
+      txtPresetClipboard1.SelectAll();
+      txtPresetClipboard1.Copy();
+    }
+
+    private void btnCopyPresetClipboard2_Click(object sender, RoutedEventArgs e)
+    {
+      //copy the text in the box 2 to the clipboard
+      txtPresetClipboard2.SelectAll();
+      txtPresetClipboard2.Copy();
+    }
+
+    private void btnPasteNotepad1_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnPasteNotepad2_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnClearNotepad1_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void btnClearNotepad2_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+  }
+}
