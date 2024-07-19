@@ -23,10 +23,7 @@ namespace MicroRenamerWPF
     public MainWindow()
     {
       InitializeComponent();
-    }
-      
-
-
+    }    
 
     private void getFolderPath(TextBox txtBox) {
 
@@ -49,12 +46,7 @@ namespace MicroRenamerWPF
       }
 
       txtBox.Text = fullPathToFolder;
-
     }
-
-  
-
-   
 
     private void RenameFiles(TextBox txtFolder){
 
@@ -110,7 +102,6 @@ namespace MicroRenamerWPF
               }
               string newFileName = string.Concat(todaysDate, a, b, System.IO.Path.GetFileName(filePath));
 
-
               newFileName = newFileName.ToLower();
               newFileName = newFileName.Replace("main", "MAIN");
               newFileName = newFileName.Replace("lead", "LEAD");
@@ -140,12 +131,10 @@ namespace MicroRenamerWPF
         MessageBox.Show("Downloads directory does not exist.");
       }
       txtAddText.Clear();
-
-
     }
 
-    private void renameSpecial(string folder) {
-     
+
+    private void renameSpecial(string folder) {     
 
       // Check if the directory exists
       if (Directory.Exists(folder))
@@ -245,7 +234,6 @@ namespace MicroRenamerWPF
 
     private void renameNumbers(string folder)
     {
-
       // Check if the directory exists
       if (Directory.Exists(folder))
       {
@@ -297,12 +285,9 @@ namespace MicroRenamerWPF
     {
       string folderPath = folder;
 
-
       if (Directory.Exists(folderPath))
       {
-
         string[] files = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
-
 
         foreach (string filePath in files)
         {
@@ -341,7 +326,6 @@ namespace MicroRenamerWPF
               newFileName = newFileName.ToLower();
               TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
               newFileName = textInfo.ToTitleCase(newFileName);
-
 
               fileExtension = fileExtension.ToLower();
 
