@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MicroRenamerWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="627" Width="923">
+        Title="Micro Renamer for Windows - Syntax Communications" Height="627" Width="923">
   <Window.Background>
     <ImageBrush Opacity="0.6"/>
   </Window.Background>
