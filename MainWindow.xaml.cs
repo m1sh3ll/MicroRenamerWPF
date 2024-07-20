@@ -1,17 +1,7 @@
 ﻿using System.Globalization;
-using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Microsoft.VisualBasic.FileIO;
 
 namespace MicroRenamerWPF
 {
@@ -66,10 +56,10 @@ namespace MicroRenamerWPF
 
     private void renameWithDateAndText(string folder){
       // Check if the directory exists
-      if (Directory.Exists(folder))
+      if (System.IO.Directory.Exists(folder))
       {
         // Get all files in the directory
-        string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+        string[] files = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
 
         // Iterate through each file
         foreach (string filePath in files)
@@ -107,16 +97,19 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("lead", "LEAD");
               newFileName = newFileName.Replace("slider", "SLIDER");
 
-              if (txtRemoveText.Text.Length > 0)
+              if (chkRemoveText.IsChecked == true)
               {
-                string txtremove = txtRemoveText.Text.ToLower();
-                newFileName = newFileName.Replace(txtremove, "");
+                if (txtRemoveText.Text.Length > 0)
+                {
+                  string txtremove = txtRemoveText.Text.ToLower();
+                  newFileName = newFileName.Replace(txtremove, "");
+                }
               }
               // Combine the new file name with the original directory
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
 
               // Rename the file
-              File.Move(filePath, newFilePath);
+              System.IO.File.Move(filePath, newFilePath);
             }
 
           }
@@ -137,10 +130,10 @@ namespace MicroRenamerWPF
     private void renameSpecial(string folder) {     
 
       // Check if the directory exists
-      if (Directory.Exists(folder))
+      if (System.IO.Directory.Exists(folder))
       {
         // Get all files in the directory
-        string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+        string[] files = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
 
         // Iterate through each file
         foreach (string filePath in files)
@@ -218,7 +211,7 @@ namespace MicroRenamerWPF
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
 
               // Rename the file
-              File.Move(filePath, newFilePath);
+              System.IO.File.Move(filePath, newFilePath);
             }
           }
           catch
@@ -235,10 +228,10 @@ namespace MicroRenamerWPF
     private void renameNumbers(string folder)
     {
       // Check if the directory exists
-      if (Directory.Exists(folder))
+      if (System.IO.Directory.Exists(folder))
       {
         // Get all files in the directory
-        string[] files = Directory.GetFiles(folder, "*", SearchOption.AllDirectories);
+        string[] files = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
         int i = 0;
         // Iterate through each file
         foreach (string filePath in files)
@@ -266,7 +259,7 @@ namespace MicroRenamerWPF
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
 
               // Rename the file
-              File.Move(filePath, newFilePath);
+              System.IO.File.Move(filePath, newFilePath);
             }
           }
           catch (Exception ex)
@@ -285,9 +278,9 @@ namespace MicroRenamerWPF
     {
       string folderPath = folder;
 
-      if (Directory.Exists(folderPath))
+      if (System.IO.Directory.Exists(folderPath))
       {
-        string[] files = Directory.GetFiles(folderPath, "*", SearchOption.AllDirectories);
+        string[] files = System.IO.Directory.GetFiles(folderPath, "*", System.IO.SearchOption.AllDirectories);
 
         foreach (string filePath in files)
         {
@@ -334,7 +327,7 @@ namespace MicroRenamerWPF
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
 
               // Rename the file
-              File.Move(filePath, newFilePath);
+              System.IO.File.Move(filePath, newFilePath);
             }
           }
           catch
@@ -355,15 +348,18 @@ namespace MicroRenamerWPF
       try
       {
         // Check if the directory exists
-        if (Directory.Exists(directoryPath))
+        if (System.IO.Directory.Exists(directoryPath))
         {
           // Delete all files in the directory
-          foreach (string filePath in Directory.GetFiles(directoryPath))
+          foreach (string filePath in System.IO.Directory.GetFiles(directoryPath))
           {
-            File.Delete(filePath);
+            //File.Delete(filePath);
+            FileSystem.DeleteFile(filePath,
+                UIOption.OnlyErrorDialogs,
+                RecycleOption.SendToRecycleBin);
           }
           // Recursively delete files in subdirectories
-          foreach (string subDirectoryPath in Directory.GetDirectories(directoryPath))
+          foreach (string subDirectoryPath in System.IO.Directory.GetDirectories(directoryPath))
           {
             DeleteFilesInDirectory(subDirectoryPath);
           }

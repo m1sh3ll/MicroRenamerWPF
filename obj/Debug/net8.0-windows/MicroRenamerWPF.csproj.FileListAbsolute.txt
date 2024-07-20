@@ -19,3 +19,4 @@ E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.pdb
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF.genruntimeconfig.cache
 E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\ref\MicroRenamerWPF.dll
+E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\MicroRenamerWPF_Content.g.cs
