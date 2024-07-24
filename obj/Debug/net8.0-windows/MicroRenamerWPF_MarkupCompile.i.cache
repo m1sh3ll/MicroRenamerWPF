@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Debug\net8.0-windows\
 MicroRenamerWPF
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-E:\Dropbox\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\App.xaml
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\App.xaml
 11407045341
 1-948405115
 6310171264
 198-635017904
 MainWindow.xaml;
 
-False
+True
 

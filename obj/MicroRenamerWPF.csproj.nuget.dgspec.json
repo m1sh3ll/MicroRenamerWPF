@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Dropbox\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj": {}
+    "E:\\PROJECTS\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj": {}
   },
   "projects": {
-    "E:\\Dropbox\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj": {
+    "E:\\PROJECTS\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Dropbox\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj",
+        "projectUniqueName": "E:\\PROJECTS\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj",
         "projectName": "MicroRenamerWPF",
-        "projectPath": "E:\\Dropbox\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj",
+        "projectPath": "E:\\PROJECTS\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj",
         "packagesPath": "C:\\Users\\michelle\\.nuget\\packages\\",
-        "outputPath": "E:\\Dropbox\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\obj\\",
+        "outputPath": "E:\\PROJECTS\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
