@@ -162,8 +162,11 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace(" ", "_");
               newFileName = newFileName.Replace(".", "");
               newFileName = newFileName.Replace("(", "");
+              newFileName = newFileName.Replace(";", "");
               newFileName = newFileName.Replace("docx", "");
               newFileName = newFileName.Replace("pptx", "");
+              newFileName = newFileName.Replace("jpeg", "");
+              newFileName = newFileName.Replace("png", "");
               newFileName = newFileName.Replace("copy", "");
               newFileName = newFileName.Replace(")", "");
               newFileName = newFileName.Replace("[", "");
@@ -195,7 +198,7 @@ namespace MicroRenamerWPF
 
               if (chkMaxLength45.IsChecked == true)
               {
-                if (newFileName.Length > 45)
+                if (newFileName.Length > 45 && !newFileName.Contains(".pdf"))
                 {
                   newFileName = newFileName.Replace("_", "");
                   newFileName = newFileName.Replace("-", "");
@@ -305,21 +308,22 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace(")", "_");
               newFileName = newFileName.Replace("]", "_");
               newFileName = newFileName.Replace("‘", "_");
+              newFileName = newFileName.Replace(";", "_");
               newFileName = newFileName.Replace("[", "_");
               newFileName = newFileName.Replace(",", "_");
               newFileName = newFileName.Replace("#", "_");
               newFileName = newFileName.Replace("~", "_");
               newFileName = newFileName.Replace("'", "_");
               newFileName = newFileName.Replace("__", "_");
-              newFileName = newFileName.Replace("__", "_");
-              newFileName = newFileName.Replace("-", "_");
+              newFileName = newFileName.Replace("__", "_");           
               newFileName = newFileName.Replace("_", " ");
               newFileName = newFileName.Replace("  ", " ");
               newFileName = newFileName.Replace("  ", " ");
               newFileName = newFileName.ToLower();
               TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
               newFileName = textInfo.ToTitleCase(newFileName);
-
+              newFileName = newFileName.Replace("Etpto", "ETPTO");
+              newFileName = newFileName.Replace("Septo", "SEPTO");
               fileExtension = fileExtension.ToLower();
 
               newFileName = newFileName + fileExtension;
@@ -438,7 +442,18 @@ namespace MicroRenamerWPF
       txtPresetClipboard1.SelectAll();
       txtPresetClipboard1.Copy();
     }
-
+    private void btnCopyPresetClipboard3_Click(object sender, RoutedEventArgs e)
+    {
+      //copy the text in the box 1 to the clipboard
+      txtPresetClipboard3.SelectAll();
+      txtPresetClipboard3.Copy();
+    }
+    private void btnCopyPresetClipboard4_Click(object sender, RoutedEventArgs e)
+    {
+      //copy the text in the box 1 to the clipboard
+      txtPresetClipboard4.SelectAll();
+      txtPresetClipboard4.Copy();
+    }
     private void btnCopyPresetClipboard2_Click(object sender, RoutedEventArgs e)
     {
       //copy the text in the box 2 to the clipboard

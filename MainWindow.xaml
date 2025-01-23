@@ -48,7 +48,7 @@
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="539,242,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Remove Text"/>
     <Button x:Name="btnOpenFolderDir1" Content="..." HorizontalAlignment="Left" Height="28" Margin="243,136,0,0" VerticalAlignment="Top" Width="48" Background="#FF1A85D7" Foreground="White" FontFamily="Arial" Click="btnOpenFolderDir1_Click"/>
     <Button x:Name="btnOpenFolderDir2" Content="..." HorizontalAlignment="Left" Height="28" Margin="243,248,0,0" VerticalAlignment="Top" Width="48" Background="#FF1A85D7" Foreground="White" FontFamily="Arial" Click="btnOpenFolderDir2_Click"/>
-    <Button x:Name="btnRecycleBoth" Content="Recycle Both" HorizontalAlignment="Left" Height="50" Margin="18,306,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FFFC7A20"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRecycleBoth_Click"/>
+    <Button x:Name="btnRecycleBoth" Content="Recycle Both" HorizontalAlignment="Left" Height="50" Margin="20,291,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FFFC7A20"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRecycleBoth_Click"/>
     <Button x:Name="btnRenameDir1" Content="Rename" HorizontalAlignment="Left" Height="29" Margin="318,101,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF3DAEB6"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRenameDir1_Click"/>
     <Button x:Name="btnRenameDir2" Content="Rename" HorizontalAlignment="Left" Height="29" Margin="318,213,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF3DAEB6"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRenameDir2_Click"/>
     <Button x:Name="btnTitleCaseDir1" Content="Title Case" HorizontalAlignment="Left" Height="29" Margin="318,135,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF8AAD2A"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnTitleCaseDir1_Click"/>
@@ -63,6 +63,10 @@
     <Button x:Name="btnPasteNotepad2" Content="Paste" HorizontalAlignment="Left" Height="29" Margin="611,547,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnPasteNotepad2_Click"/>
     <Button x:Name="btnClearNotepad1" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="317,547,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad1_Click"/>
     <Button x:Name="btnClearNotepad2" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="760,547,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad2_Click"/>
+    <TextBox x:Name="txtPresetClipboard3" HorizontalAlignment="Left" Height="25" Margin="21,352,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all updated!" Padding="2,0,0,0"/>
+    <TextBox x:Name="txtPresetClipboard4" HorizontalAlignment="Left" Height="25" Margin="21,388,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all posted!" Padding="2,0,0,0"/>
+    <Button x:Name="btnCopyPresetClipboard3" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="317,350,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard3_Click"/>
+    <Button x:Name="btnCopyPresetClipboard4" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="317,386,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard4_Click"/>
 
 
 
