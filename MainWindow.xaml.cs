@@ -324,6 +324,10 @@ namespace MicroRenamerWPF
               newFileName = textInfo.ToTitleCase(newFileName);
               newFileName = newFileName.Replace("Etpto", "ETPTO");
               newFileName = newFileName.Replace("Septo", "SEPTO");
+              newFileName = newFileName.Replace("Esm", "ESM");
+              newFileName = newFileName.Replace("Smpta", "SMPTA");
+              newFileName = newFileName.Replace("Esmsa", "ESMSA");
+              newFileName = newFileName.Replace("Jv", "JV");
               fileExtension = fileExtension.ToLower();
 
               newFileName = newFileName + fileExtension;
