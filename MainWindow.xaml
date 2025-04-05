@@ -18,6 +18,7 @@
 
 
 
+
     <TextBlock x:Name="lblTitle" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,2,0,0" Foreground="White" FontFamily="Arial" FontSize="26" Text="Micro Renamer"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,32,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Bulk File Renamer and Text Cleaner"/>
     <TextBox x:Name="txtNotepad2" Margin="464,444,15,45" TextWrapping="Wrap" Background="White" Width="419" Height="95" Padding="2,0,0,0"/>
@@ -27,8 +28,8 @@
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,195,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Directory #2"/>
     <TextBlock x:Name="lblNotepads" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,411,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Notepads"/>
     <TextBlock x:Name="lblPresetClipboardTexts" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="464,321,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Preset Clipboard Texts"/>
-    <TextBox x:Name="txtDirectory1" HorizontalAlignment="Left" Height="25" Margin="18,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="C:\Users\michelle\Downloads" Padding="2,0,0,0"/>
-    <TextBox x:Name="txtDirectory2" HorizontalAlignment="Left" Height="25" Margin="18,215,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="C:\Users\michelle\Desktop\New Folder" Padding="2,0,0,0"/>
+    <TextBox x:Name="txtDirectory1" HorizontalAlignment="Left" Height="25" Margin="18,103,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="X:\Downloads" Padding="2,0,0,0"/>
+    <TextBox x:Name="txtDirectory2" HorizontalAlignment="Left" Height="25" Margin="18,215,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="X:\New Folder" Padding="2,0,0,0"/>
     <TextBox x:Name="txtPresetClipboard1" HorizontalAlignment="Left" Height="25" Margin="464,354,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all set!" Padding="2,0,0,0"/>
     <TextBox x:Name="txtPresetClipboard2" HorizontalAlignment="Left" Height="25" Margin="464,390,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all scheduled!" Padding="2,0,0,0"/>
     <TextBox x:Name="txtAddText" HorizontalAlignment="Left" Height="25" Margin="539,202,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="314" VerticalContentAlignment="Center" Padding="2,0,0,0"/>
