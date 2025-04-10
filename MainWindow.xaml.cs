@@ -328,6 +328,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("Smpta", "SMPTA");
               newFileName = newFileName.Replace("Esmsa", "ESMSA");
               newFileName = newFileName.Replace("Neysa", "NEYSA");
+              newFileName = newFileName.Replace("Scope", "SCOPE");
               newFileName = newFileName.Replace("Jv", "JV");
               fileExtension = fileExtension.ToLower();
 
