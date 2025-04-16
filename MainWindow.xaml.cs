@@ -168,6 +168,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("jpeg", "");
               newFileName = newFileName.Replace("png", "");
               newFileName = newFileName.Replace("copy", "");
+              newFileName = newFileName.Replace("processed", "");
               newFileName = newFileName.Replace(")", "");
               newFileName = newFileName.Replace("[", "");
               newFileName = newFileName.Replace("]", "");
