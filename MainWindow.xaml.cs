@@ -489,5 +489,11 @@ namespace MicroRenamerWPF
     {
       txtNotepad2.Clear();
     }
+
+    private void btnCopyPresetClipboard0_Click(object sender, RoutedEventArgs e)
+    {
+      txtPresetClipboard0.SelectAll();
+      txtPresetClipboard0.Copy();
+    }
   }
 }
