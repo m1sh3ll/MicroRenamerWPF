@@ -168,6 +168,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("jpeg", "");
               newFileName = newFileName.Replace("png", "");
               newFileName = newFileName.Replace("copy", "");
+              newFileName = newFileName.Replace("google_docs", "");
               newFileName = newFileName.Replace("processed", "");
               newFileName = newFileName.Replace(")", "");
               newFileName = newFileName.Replace("[", "");
@@ -189,8 +190,7 @@ namespace MicroRenamerWPF
 
               fileExtension = fileExtension.ToLower();
               fileExtension = fileExtension.Replace("jpeg", "jpg");
-              fileExtension = fileExtension.Replace("heic", "jpg");
-              fileExtension = fileExtension.Replace("png", "jpg");
+              
               newFileName = newFileName.Replace("main", "MAIN");
               newFileName = newFileName.Replace("lead", "LEAD");
               newFileName = newFileName.Replace("slider", "SLIDER");
@@ -325,11 +325,26 @@ namespace MicroRenamerWPF
               newFileName = textInfo.ToTitleCase(newFileName);
               newFileName = newFileName.Replace("Etpto", "ETPTO");
               newFileName = newFileName.Replace("Septo", "SEPTO");
+              newFileName = newFileName.Replace("Sepfc", "SEPFC");
               newFileName = newFileName.Replace("Esm", "ESM");
+              newFileName = newFileName.Replace("Cyo", "CYO");
+              newFileName = newFileName.Replace("Sscm", "SSCM");
+              newFileName = newFileName.Replace("ESMsa", "ESMSA");
               newFileName = newFileName.Replace("Smpta", "SMPTA");
               newFileName = newFileName.Replace("Esmsa", "ESMSA");
               newFileName = newFileName.Replace("Neysa", "NEYSA");
               newFileName = newFileName.Replace("Scope", "SCOPE");
+              newFileName = newFileName.Replace("Dp", "DP");
+              newFileName = newFileName.Replace("DPac", "DPAC");
+              newFileName = newFileName.Replace("1St", "1st");
+              newFileName = newFileName.Replace("2Nd", "2nd");
+              newFileName = newFileName.Replace("3Rd", "3rd");
+              newFileName = newFileName.Replace("4Th", "4th");
+              newFileName = newFileName.Replace("5Th", "5th");
+              newFileName = newFileName.Replace("6Th", "6th");
+              newFileName = newFileName.Replace("7Th", "7th");
+              newFileName = newFileName.Replace("8Th", "8th");
+              newFileName = newFileName.Replace("9Th", "9th");
               newFileName = newFileName.Replace("Jv", "JV");
               fileExtension = fileExtension.ToLower();
 
