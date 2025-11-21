@@ -93,9 +93,9 @@ namespace MicroRenamerWPF
               string newFileName = string.Concat(todaysDate, a, b, System.IO.Path.GetFileName(filePath));
 
               newFileName = newFileName.ToLower();
-              newFileName = newFileName.Replace("main", "MAIN");
-              newFileName = newFileName.Replace("lead", "LEAD");
-              newFileName = newFileName.Replace("slider", "SLIDER");
+
+              // ---------------------------------------***capitalize any main or lead items****
+              newFileName = renameMAINLEAD(newFileName);             
 
               if (chkRemoveText.IsChecked == true)
               {
@@ -125,8 +125,18 @@ namespace MicroRenamerWPF
       }
       txtAddText.Clear();
     }
+    // ---------------------------------------***capitalize any main or lead items****
 
-
+    private string renameMAINLEAD(string str) {
+      str = str.Replace("main", "MAIN");
+      str = str.Replace("lead", "LEAD");
+      str = str.Replace("slider", "SLIDER");
+      str = str.Replace("slideshow", "SLIDESHOW");
+      str = str.Replace("cover", "COVER");
+      str = str.Replace("gallery", "GALLERY");
+      str = str.Replace("news", "NEWS");
+      return str;
+    }
     private void renameSpecial(string folder) {     
 
       // Check if the directory exists
@@ -190,10 +200,10 @@ namespace MicroRenamerWPF
 
               fileExtension = fileExtension.ToLower();
               fileExtension = fileExtension.Replace("jpeg", "jpg");
-              
-              newFileName = newFileName.Replace("main", "MAIN");
-              newFileName = newFileName.Replace("lead", "LEAD");
-              newFileName = newFileName.Replace("slider", "SLIDER");
+
+              // ---------------------------------------***capitalize any main or lead items****
+
+              newFileName = renameMAINLEAD(newFileName);
 
               newFileName = newFileName + fileExtension;
 
@@ -206,7 +216,7 @@ namespace MicroRenamerWPF
 
                   if (newFileName.Length > 45)
                   {
-                    MessageBox.Show($"Warning: Too long filename - newfilename {newFileName} is {newFileName.Length} characters. Charcount must be under 45. ");
+                    MessageBox.Show($"Warning: Filename too long - newfilename {newFileName} is {newFileName.Length} chars. Must be under 45. ");
                   }
                 }
               }
@@ -256,9 +266,11 @@ namespace MicroRenamerWPF
               newFileName += fileExtension;
               newFileName = newFileName.ToLower();
               newFileName = newFileName.Replace("--", "-");
-              newFileName = newFileName.Replace("main", "MAIN");
-              newFileName = newFileName.Replace("lead", "LEAD");
-              newFileName = newFileName.Replace("slider", "SLIDER");
+
+              //capitalize any main or lead items
+              newFileName = renameMAINLEAD(newFileName);
+
+
               // Combine the new file name with the original directory
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
 
