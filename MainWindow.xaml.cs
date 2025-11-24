@@ -135,6 +135,7 @@ namespace MicroRenamerWPF
       str = str.Replace("cover", "COVER");
       str = str.Replace("gallery", "GALLERY");
       str = str.Replace("news", "NEWS");
+      str = str.Replace("feature", "FEATURE");
       return str;
     }
     private void renameSpecial(string folder) {     
