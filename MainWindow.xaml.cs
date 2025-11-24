@@ -358,6 +358,9 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("7Th", "7th");
               newFileName = newFileName.Replace("8Th", "8th");
               newFileName = newFileName.Replace("9Th", "9th");
+              newFileName = newFileName.Replace("10Th", "10th");
+              newFileName = newFileName.Replace("11Th", "11th");
+              newFileName = newFileName.Replace("12Th", "12th");
               newFileName = newFileName.Replace("Jv", "JV");
               fileExtension = fileExtension.ToLower();
 
