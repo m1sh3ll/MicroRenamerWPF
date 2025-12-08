@@ -166,6 +166,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("image", "");
               newFileName = newFileName.Replace("good", "");
               newFileName = newFileName.Replace("new site", "");
+              newFileName = newFileName.Replace("for website", "");
               newFileName = newFileName.Replace("website", "");
               newFileName = newFileName.Replace("web", "");
               newFileName = newFileName.Replace("dsc", "");
