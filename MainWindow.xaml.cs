@@ -162,7 +162,12 @@ namespace MicroRenamerWPF
 
               newFileName = newFileName.Replace("&", "_");
               newFileName = newFileName.Replace("img", "");
+              newFileName = newFileName.Replace("images", "");
               newFileName = newFileName.Replace("image", "");
+              newFileName = newFileName.Replace("good", "");
+              newFileName = newFileName.Replace("new site", "");
+              newFileName = newFileName.Replace("website", "");
+              newFileName = newFileName.Replace("web", "");
               newFileName = newFileName.Replace("dsc", "");
               newFileName = newFileName.Replace("unknown", "");
               newFileName = newFileName.Replace("unnamed", "");
@@ -179,6 +184,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("pptx", "");
               newFileName = newFileName.Replace("jpeg", "");
               newFileName = newFileName.Replace("png", "");
+              newFileName = newFileName.Replace("copy of", "");
               newFileName = newFileName.Replace("copy", "");
               newFileName = newFileName.Replace("google_docs", "");
               newFileName = newFileName.Replace("processed", "");
