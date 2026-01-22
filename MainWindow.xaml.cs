@@ -1,7 +1,8 @@
-﻿using System.Globalization;
+﻿using Microsoft.VisualBasic.FileIO;
+using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.VisualBasic.FileIO;
 
 namespace MicroRenamerWPF
 {
@@ -40,6 +41,10 @@ namespace MicroRenamerWPF
 
     private void RenameFiles(TextBox txtFolder){
 
+      if (chkRemoveAllText.IsChecked == true)
+      {
+        renameNumbersOnly(txtFolder.Text);
+      }
       if (chkAddDate.IsChecked == true || chkAddText.IsChecked == true)
       {
         renameWithDateAndText(txtFolder.Text);
@@ -52,8 +57,52 @@ namespace MicroRenamerWPF
       {
         renameNumbers(txtFolder.Text);
       }
-    }
 
+      
+    }
+    private void renameNumbersOnly(String folder) {
+      if (!Directory.Exists(folder))
+      {
+        MessageBox.Show("Directory does not exist.");
+        return;
+      }
+
+      var files = Directory.GetFiles(folder)
+                           .OrderBy(f => f)
+                           .ToList();
+
+      int i = 0;
+
+      foreach (string filePath in files)
+      {
+        try
+        {
+          string fileExtension = Path.GetExtension(filePath).ToLower();
+
+          // Skip unwanted extensions if needed
+          if (fileExtension == ".docx" || fileExtension == ".doc" || fileExtension == ".zip")
+            continue;
+
+          string newFileName = $"-{++i}{fileExtension}";
+          newFileName = newFileName.Replace("--", "-");
+          string newFilePath = Path.Combine(folder, newFileName);
+
+          if (!File.Exists(newFilePath))
+          {
+            File.Move(filePath, newFilePath);
+          }
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show($"Error renaming file: {ex.Message}");
+        }
+      }
+
+
+
+
+
+    }
     private void renameWithDateAndText(string folder){
       // Check if the directory exists
       if (System.IO.Directory.Exists(folder))
@@ -66,7 +115,7 @@ namespace MicroRenamerWPF
         {
           try
           {
-            // Extract the file name and extension           
+            // Extract the file name and fileExtension           
             string fileExtension = System.IO.Path.GetExtension(filePath);
             fileExtension = fileExtension.ToLower();
             if (fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip")
@@ -151,7 +200,7 @@ namespace MicroRenamerWPF
         {
           try
           {
-            // Extract the file name and extension
+            // Extract the file name and fileExtension
             string fileName = System.IO.Path.GetFileName(filePath);
             string fileExtension = System.IO.Path.GetExtension(filePath);
             fileExtension = fileExtension.ToLower();
@@ -262,12 +311,15 @@ namespace MicroRenamerWPF
 
           try
           {
-            // Extract the file name and extension           
+            // Extract the file name and fileExtension           
             string fileExtension = System.IO.Path.GetExtension(filePath);
             string newFileName = System.IO.Path.GetFileName(filePath);
             fileExtension = fileExtension.ToLower();
 
-            if (fileExtension != ".pdf" && fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip")
+            if (fileExtension != ".pdf" && 
+            fileExtension != ".docx" && 
+            fileExtension != ".doc" && 
+            fileExtension != ".zip")
             {
               // Construct the new file name
               newFileName = string.Concat(newFileName, "-", ++i);
@@ -278,7 +330,6 @@ namespace MicroRenamerWPF
 
               //capitalize any main or lead items
               newFileName = renameMAINLEAD(newFileName);
-
 
               // Combine the new file name with the original directory
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
@@ -355,6 +406,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("Esmsa", "ESMSA");
               newFileName = newFileName.Replace("Neysa", "NEYSA");
               newFileName = newFileName.Replace("Scope", "SCOPE");
+              newFileName = newFileName.Replace("Stem", "STEM");
               newFileName = newFileName.Replace("Dp", "DP");
               newFileName = newFileName.Replace("DPac", "DPAC");
               newFileName = newFileName.Replace("1St", "1st");
@@ -429,45 +481,29 @@ namespace MicroRenamerWPF
       getFolderPath(txtDirectory1);
     }
 
-    private void btnOpenFolderDir2_Click(object sender, RoutedEventArgs e)
-    {
-      //gets the selected folder path
-      getFolderPath(txtDirectory2);
-    }
+    
 
     private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
     {
       RenameFiles(txtDirectory1);
     }
 
-    private void btnRenameDir2_Click(object sender, RoutedEventArgs e)
-    {
-      RenameFiles(txtDirectory2);
-    }
+   
 
     private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
     {
       renameVB(txtDirectory1.Text);
     }
 
-    private void btnTitleCaseDir2_Click(object sender, RoutedEventArgs e)
-    {
-      renameVB(txtDirectory2.Text);
-    }
+   
 
-    private void btnRecycleDir1_Click(object sender, RoutedEventArgs e)
-    {
-      DeleteFilesInDirectory(txtDirectory1.Text);
-    }
-    private void btnRecycleDir2_Click(object sender, RoutedEventArgs e)
-    {
-      DeleteFilesInDirectory(txtDirectory2.Text);
-    }
+    
+   
 
     private void btnRecycleBoth_Click(object sender, RoutedEventArgs e)
     {
       DeleteFilesInDirectory(txtDirectory1.Text);
-      DeleteFilesInDirectory(txtDirectory2.Text);
+     
     }
 
     private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
@@ -481,7 +517,11 @@ namespace MicroRenamerWPF
       txtNotepad2.SelectAll();
       txtNotepad2.Copy();
     }
-
+    private void btnCopyNotepad3_Click(object sender, RoutedEventArgs e)
+    {
+      txtNotepad3.SelectAll();
+      txtNotepad3.Copy();
+    }
     private void btnCopyPresetClipboard1_Click(object sender, RoutedEventArgs e)
     {
     //copy the text in the box 1 to the clipboard
@@ -534,5 +574,17 @@ namespace MicroRenamerWPF
       txtPresetClipboard0.SelectAll();
       txtPresetClipboard0.Copy();
     }
+
+    private void btnPasteNotepad3_Click(object sender, RoutedEventArgs e)
+    {
+    
+      string cb = Clipboard.GetText();
+      txtNotepad3.Text = cb;
+    }
+    private void btnClearNotepad3_Click(object sender, RoutedEventArgs e)
+    {
+      txtNotepad3.Clear();
+    }
+
   }
 }
