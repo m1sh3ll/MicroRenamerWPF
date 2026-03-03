@@ -30,8 +30,8 @@
     <TextBlock x:Name="lblPasteTextToRemoveFormatting" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="126,143,0,0" Foreground="White" FontFamily="Arial" FontSize="10" Text="- Paste your text to remove formatting"/>
     <CheckBox x:Name="chkRemoveSpecial" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,53,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="True"/>
     <CheckBox x:Name="chkAddDate" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,86,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="True"/>
-    <CheckBox x:Name="chkMaxLength45" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,116,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="True"/>
-    <CheckBox x:Name="chkNumberItems" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,146,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="True"/>
+    <CheckBox x:Name="chkMaxLength45" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,116,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="False"/>
+    <CheckBox x:Name="chkNumberItems" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,146,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="False"/>
     <CheckBox x:Name="chkAddText" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,180,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="True"/>
     <CheckBox x:Name="chkRemoveText" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="495,241,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="True"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="521,51,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Remove Special Characters"/>
