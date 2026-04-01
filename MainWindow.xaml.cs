@@ -23,7 +23,7 @@ namespace MicroRenamerWPF
       Microsoft.Win32.OpenFolderDialog dialog = new();
 
       dialog.Multiselect = false;
-      dialog.Title = "Select a folder";
+      dialog.Title = "Select textToAdd folder";
 
       // Show open folder dialog box
       bool? result = dialog.ShowDialog();
@@ -43,7 +43,7 @@ namespace MicroRenamerWPF
 
       if (chkRemoveAllText.IsChecked == true)
       {
-        renameNumbersOnly(txtFolder.Text);
+        renameNumbersOnly(txtFolder.Text); //remove all text and number each file (Add text in the "add text box" to add text)
       }
       if (chkAddDate.IsChecked == true || chkAddText.IsChecked == true)
       {
@@ -60,6 +60,7 @@ namespace MicroRenamerWPF
 
       
     }
+    //Rename the files but remove all the text first, rename it with numbers only. not good for subfolders
     private void renameNumbersOnly(String folder) {
       if (!Directory.Exists(folder))
       {
@@ -104,6 +105,9 @@ namespace MicroRenamerWPF
 
     }
     private void renameWithDateAndText(string folder){
+      string todaysDate = GetTodaysDate();
+      string textToAdd = txtAddText.Text;
+
       // Check if the directory exists
       if (System.IO.Directory.Exists(folder))
       {
@@ -119,27 +123,22 @@ namespace MicroRenamerWPF
             string fileExtension = System.IO.Path.GetExtension(filePath);
             fileExtension = fileExtension.ToLower();
             if (fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip")
-            {
-              string a = "", b = "";
-              string todaysDate = "";
+            {        
+              
 
               //Add text if the option is selected
-              if (chkAddText.IsChecked == true)
+              if (chkAddText.IsChecked == false)
               {
-                if (txtAddText.Text != "")
-                {
-                  a = txtAddText.Text;
-                  b = "-";
-                }
+                textToAdd = "";
               }
 
               //Add date if the option is selected
-              if (chkAddDate.IsChecked == true)
+              if (chkAddDate.IsChecked == false)
               {
-
-                todaysDate = string.Concat(DateTime.Now.Month.ToString("D2"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("yy"), "-");
+                todaysDate = "";
               }
-              string newFileName = string.Concat(todaysDate, a, b, System.IO.Path.GetFileName(filePath));
+              //Checks if the date is already added and won't add the date twice
+              string newFileName = string.Concat(todaysDate, textToAdd, "-", System.IO.Path.GetFileName(filePath).Replace(todaysDate, ""));
 
               newFileName = newFileName.ToLower();
 
@@ -159,6 +158,7 @@ namespace MicroRenamerWPF
 
               // Rename the file
               System.IO.File.Move(filePath, newFilePath);
+              chkRemoveAllText.IsChecked = false;
             }
 
           }
@@ -175,7 +175,10 @@ namespace MicroRenamerWPF
       txtAddText.Clear();
     }
     // ---------------------------------------***capitalize any main or lead items****
-
+    private string GetTodaysDate()
+    {
+      return string.Concat(DateTime.Now.Month.ToString("D2"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("yy"), "-");
+    }
     private string renameMAINLEAD(string str) {
       str = str.Replace("main", "MAIN");
       str = str.Replace("lead", "LEAD");
@@ -422,6 +425,8 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("11Th", "11th");
               newFileName = newFileName.Replace("12Th", "12th");
               newFileName = newFileName.Replace("Jv", "JV");
+              newFileName = newFileName.Replace("Parp", "PARP");
+              newFileName = newFileName.Replace(GetTodaysDate(), ""); //remove the date if added by accident
               fileExtension = fileExtension.ToLower();
 
               newFileName = newFileName + fileExtension;
@@ -585,6 +590,151 @@ namespace MicroRenamerWPF
     {
       txtNotepad3.Clear();
     }
+    private void RemoveDateFromFiles(string folder, string textToRemove) {
+     
 
+      if (!Directory.Exists(folder))
+      {
+        MessageBox.Show("Directory does not exist.");
+        return;
+      }
+
+      var files = Directory.GetFiles(folder);
+
+      foreach (string filePath in files)
+      {
+        try
+        {
+          string directory = Path.GetDirectoryName(filePath);
+          string extension = Path.GetExtension(filePath);
+          string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
+
+          // Remove the target text
+          string newName = fileNameWithoutExt.Replace(textToRemove, "");
+
+          // Optional cleanup (nice to have)
+          newName = newName.Replace("__", "_")
+                           .Replace("--", "-")
+                           .Trim('_', '-', ' ');
+
+          string newFileName = newName + extension;
+          string newFilePath = Path.Combine(directory, newFileName);
+
+          // Skip if nothing changed
+          if (filePath == newFilePath)
+            continue;
+
+          // Prevent overwrite
+          if (!File.Exists(newFilePath))
+          {
+            File.Move(filePath, newFilePath);
+          }
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show($"Error renaming file: {ex.Message}");
+        }
+      }
+    }
+
+    private void btnUndoDates_Click(object sender, RoutedEventArgs e)
+    {
+    RemoveDateFromFiles(txtDirectory1.Text, GetTodaysDate());
+    }
+
+    private void btnTitlesDL_Click(object sender, RoutedEventArgs e)
+    {
+      LoadFileNamesToTextBox(txtDirectory1.Text);
+    }
+    private void LoadFileNamesToTextBox(string folder)
+    {
+     
+
+      if (!Directory.Exists(folder))
+      {
+        MessageBox.Show("Directory does not exist.");
+        return;
+      }
+
+      var textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+      var fileNames = Directory.GetFiles(folder)
+                               .OrderBy(f => f)
+                               .Select(file =>
+                               {
+                                 string name = Path.GetFileNameWithoutExtension(file);
+                                 name = name.Replace(GetTodaysDate(), "");
+                                 // Clean + Title Case
+                                 name = name.Replace("_", " ")
+                                          .Replace("-", " ");
+
+                                 name = textInfo.ToTitleCase(name.ToLower());
+
+
+                                 return name;
+                               });
+
+      txtNotepad4.Text = string.Join(Environment.NewLine, fileNames);
+    }
+    private void LoadHtmlListToTextBox(string folder)
+    {
+      if (!Directory.Exists(folder))
+      {
+        MessageBox.Show("Directory does not exist.");
+        return;
+      }
+
+      var textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+      var listItems = Directory.GetFiles(folder)
+                               .OrderBy(f => f)
+                               .Select(file =>
+                               {
+                                 string name = Path.GetFileNameWithoutExtension(file);
+
+                                 // Remove today's date
+                                 string today = GetTodaysDate();
+                                 if (!string.IsNullOrEmpty(today))
+                                   name = name.Replace(today, "");
+
+                                 // Clean separators
+                                 name = name.Replace("_", " ")
+                                          .Replace("-", " ");
+
+                                 // Remove extra spaces
+                                 name = string.Join(" ", name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+                                 // Title Case
+                                 name = textInfo.ToTitleCase(name.ToLower());
+
+                                 // Convert to HTML-safe text
+                                 name = System.Net.WebUtility.HtmlEncode(name);
+
+                                 return $"  <li>{name}</li>";
+                               });
+
+      string html =
+          "<ul>\r\n" +
+          string.Join("\r\n", listItems) +
+          "\r\n</ul>";
+
+      txtNotepad4.Text = html;
+    }
+
+    private void btnBullets_DL_Click(object sender, RoutedEventArgs e)
+    {
+      LoadHtmlListToTextBox(txtDirectory1.Text);
+    }
+
+    private void btnCopyNotepad4_Click(object sender, RoutedEventArgs e)
+    {
+      txtNotepad4.SelectAll();
+      txtNotepad4.Copy();
+    }
+
+    private void btnClearNotepad4_Click(object sender, RoutedEventArgs e)
+    {
+      txtNotepad4.Clear();
+    }
   }
 }

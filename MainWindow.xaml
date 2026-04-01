@@ -5,24 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MicroRenamerWPF"
         mc:Ignorable="d"
-        Title="Micro Renamer for Windows - Syntax Communications" Height="627" Width="923">
+        Title="Micro Renamer for Windows - Syntax Communications" Height="650" Width="930">
   <Window.Background>
     <ImageBrush Opacity="0.6"/>
   </Window.Background>
   <Grid Width="900" Height="584" Background="#FF41546D">
-    <Rectangle HorizontalAlignment="Left" Height="295" Margin="464,37,0,0" Stroke="Black" VerticalAlignment="Top" Width="421">
+    <Rectangle HorizontalAlignment="Left" Height="349" Margin="464,5,0,0" Stroke="Black" VerticalAlignment="Top" Width="406">
       <Rectangle.Fill>
         <SolidColorBrush Color="#FF8E98A4" Opacity="0.75"/>
       </Rectangle.Fill>
     </Rectangle>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="16,7,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Bulk File Renamer and Text Cleaner"/>
-    <TextBox x:Name="txtNotepad2" Margin="18,296,464,230" TextWrapping="Wrap" Background="White" Width="419" Padding="2,0,0,0"/>
-    <TextBlock x:Name="lblOptions" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="464,10,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Options"/>
-    <TextBox x:Name="txtNotepad1" Margin="16,162,464,344" TextWrapping="Wrap" Width="419" Padding="2,0,0,0"/>
-    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="16,28,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Directory #1"/>
-    <TextBlock x:Name="lblNotepads" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="15,133,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Notepads"/>
-    <TextBlock x:Name="lblPresetClipboardTexts" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="474,404,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Preset Clipboard Texts"/>
-    <TextBox x:Name="txtDirectory1" HorizontalAlignment="Left" Height="25" Margin="16,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" VerticalContentAlignment="Center" Text="X:\Downloads" Padding="2,0,0,0"/>
+    <TextBox x:Name="txtNotepad2" Margin="18,206,463,320" TextWrapping="Wrap" Background="White" Width="419" Padding="2,0,0,0"/>
+    <TextBlock x:Name="lblOptions" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="482,10,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Options"/>
+    <TextBox x:Name="txtNotepad1" Margin="18,108,463,421" TextWrapping="Wrap" Width="419" Padding="2,0,0,0"/>
+    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="470,292,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Directory #1"/>
+    <TextBlock x:Name="lblNotepads" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,75,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Notepads"/>
+    <TextBlock x:Name="lblPresetClipboardTexts" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="474,363,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Preset Clipboard Texts"/>
+    <TextBox x:Name="txtDirectory1" HorizontalAlignment="Left" Height="25" Margin="470,312,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" VerticalContentAlignment="Center" Text="C:\Users\Admin\Downloads" Padding="2,0,0,0"/>
     <TextBox x:Name="txtPresetClipboard1" HorizontalAlignment="Left" Height="25" Margin="474,437,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all set!" Padding="2,0,0,0"/>
     <TextBox x:Name="txtPresetClipboard2" HorizontalAlignment="Left" Height="25" Margin="474,474,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all scheduled!" Padding="2,0,0,0"/>
     <TextBox x:Name="txtAddText" HorizontalAlignment="Left" Height="25" Margin="521,202,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="314" VerticalContentAlignment="Center" Padding="2,0,0,0"/>
@@ -39,30 +39,41 @@
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="521,144,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Number Items"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="521,178,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Add Text"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="521,240,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Remove Text"/>
-    <Button x:Name="btnOpenFolderDir1" Content="..." HorizontalAlignment="Left" Height="28" Margin="242,47,0,0" VerticalAlignment="Top" Width="48" Background="#FFD35483" Foreground="White" FontFamily="Arial" Click="btnOpenFolderDir1_Click"/>
-    <Button x:Name="btnRecycleBoth" Content="Recycle" HorizontalAlignment="Left" Height="33" Margin="297,114,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FFFC7A20"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRecycleBoth_Click"/>
-    <Button x:Name="btnRenameDir1" Content="Rename" HorizontalAlignment="Left" Height="29" Margin="296,48,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF3DAEB6"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRenameDir1_Click"/>
-    <Button x:Name="btnTitleCaseDir1" Content="Title Case" HorizontalAlignment="Left" Height="29" Margin="296,82,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF8AAD2A"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnTitleCaseDir1_Click"/>
-    <Button x:Name="btnCopyNotepad1" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="14,244,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad1_Click"/>
+    <Button x:Name="btnOpenFolderDir1" Content="..." HorizontalAlignment="Left" Height="28" Margin="696,311,0,0" VerticalAlignment="Top" Width="48" Background="#FFD35483" Foreground="White" FontFamily="Arial" Click="btnOpenFolderDir1_Click"/>
+    <Button x:Name="btnRecycleBoth" Content="Recycle" HorizontalAlignment="Left" Height="28" Margin="280,67,0,0" VerticalAlignment="Top" Width="154" FontFamily="Arial" Background="#FFFC7A20"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRecycleBoth_Click"/>
+    <Button x:Name="btnRenameDir1" Content="Rename" HorizontalAlignment="Left" Height="29" Margin="280,5,0,0" VerticalAlignment="Top" Width="154" FontFamily="Arial" Background="#FF3DAEB6"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRenameDir1_Click"/>
+    <Button x:Name="btnTitleCaseDir1" Content="Title Case" HorizontalAlignment="Left" Height="29" Margin="280,36,0,0" VerticalAlignment="Top" Width="154" FontFamily="Arial" Background="#FF8AAD2A"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnTitleCaseDir1_Click" RenderTransformOrigin="1.722,0.449"/>
+    <Button x:Name="btnCopyNotepad1" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="15,172,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad1_Click"/>
     <Button x:Name="btnCopyPresetClipboard1" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="748,435,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard1_Click"/>
     <Button x:Name="btnCopyPresetClipboard2" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="748,472,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard2_Click"/>
-    <Button x:Name="btnCopyNotepad2" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="18,362,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad2_Click"/>
-    <Button x:Name="btnPasteNotepad1" Content="Paste" HorizontalAlignment="Left" Height="29" Margin="164,244,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnPasteNotepad1_Click"/>
-    <Button x:Name="btnPasteNotepad2" Content="Paste" HorizontalAlignment="Left" Height="29" Margin="164,362,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnPasteNotepad2_Click"/>
-    <Button x:Name="btnClearNotepad1" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="314,244,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad1_Click"/>
-    <Button x:Name="btnClearNotepad2" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="314,362,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad2_Click" RenderTransformOrigin="0.48,-1.361"/>
+    <Button x:Name="btnCopyNotepad2" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="18,269,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad2_Click"/>
+    <Button x:Name="btnPasteNotepad1" Content="Paste" HorizontalAlignment="Left" Height="29" Margin="165,172,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnPasteNotepad1_Click"/>
+    <Button x:Name="btnPasteNotepad2" Content="Paste" HorizontalAlignment="Left" Height="29" Margin="164,269,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnPasteNotepad2_Click"/>
+    <Button x:Name="btnClearNotepad1" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="315,172,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad1_Click"/>
+    <Button x:Name="btnClearNotepad2" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="314,269,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad2_Click" RenderTransformOrigin="0.48,-1.361"/>
     <TextBox x:Name="txtPresetClipboard3" HorizontalAlignment="Left" Height="25" Margin="474,510,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all updated!" Padding="2,0,0,0"/>
     <TextBox x:Name="txtPresetClipboard4" HorizontalAlignment="Left" Height="25" Margin="474,544,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all posted!" Padding="2,0,0,0"/>
     <Button x:Name="btnCopyPresetClipboard3" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="748,508,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard3_Click"/>
     <Button x:Name="btnCopyPresetClipboard4" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="748,542,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard4_Click"/>
-    <TextBox x:Name="txtPresetClipboard0" HorizontalAlignment="Left" Height="25" Margin="20,549,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="290" VerticalContentAlignment="Center" Text="This is all set! Please be aware that this document is not ADA compliant, please see more information on proper compliance found in my email signature." Padding="2,0,0,0"/>
-    <Button x:Name="btnCopyPresetClipboard0" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="315,544,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard0_Click"/>
-    <TextBox x:Name="txtNotepad3" Margin="18,411,463,125" TextWrapping="Wrap" Background="White" Width="419" Padding="2,0,0,0"/>
-    <Button x:Name="btnCopyNotepad3" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="18,467,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad3_Click"/>
-    <Button x:Name="btnPasteNotepad3" Content="Paste" HorizontalAlignment="Left" Height="29" Margin="164,467,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnPasteNotepad3_Click"/>
-    <Button x:Name="btnClearNotepad3" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="314,467,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad3_Click"/>
+    <TextBox x:Name="txtPresetClipboard0" HorizontalAlignment="Left" Height="25" Margin="474,404,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="269" VerticalContentAlignment="Center" Text="This is all set! Please be aware that this document is not ADA compliant, please see more information on proper compliance found in my email signature." Padding="2,0,0,0"/>
+    <Button x:Name="btnCopyPresetClipboard0" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="748,399,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyPresetClipboard0_Click"/>
+    <TextBox x:Name="txtNotepad3" Margin="18,306,463,230" TextWrapping="Wrap" Background="White" Width="419" Padding="2,0,0,0"/>
+    <Button x:Name="btnCopyNotepad3" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="18,362,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad3_Click"/>
+    <Button x:Name="btnPasteNotepad3" Content="Paste" HorizontalAlignment="Left" Height="29" Margin="164,362,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnPasteNotepad3_Click"/>
+    <Button x:Name="btnClearNotepad3" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="314,362,0,0" VerticalAlignment="Top" Width="122" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad3_Click"/>
     <CheckBox x:Name="chkRemoveAllText" Content="" HorizontalAlignment="Left" Height="18" VerticalAlignment="Top" Margin="668,178,0,0" Background="#FFAB7DF7" Foreground="Black" IsChecked="False" RenderTransformOrigin="0.826,-3.027"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="689,178,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Remove All Text First"/>
+    <TextBox x:Name="txtHTMLLink" HorizontalAlignment="Left" Height="25" Margin="52,420,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="307" VerticalContentAlignment="Center" Padding="2,0,0,0"/>
+    <TextBox x:Name="txtHTMLText" HorizontalAlignment="Left" Height="25" Margin="52,450,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="307" VerticalContentAlignment="Center" Padding="2,0,0,0" RenderTransformOrigin="0.697,-0.439"/>
+    <Button x:Name="btnGetBullet" Content="Bullet" HorizontalAlignment="Left" Height="29" Margin="364,418,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad3_Click"/>
+    <TextBox x:Name="txtNotepad4" Margin="15,523,466,13" TextWrapping="Wrap" Background="White" Width="419" Padding="2,0,0,0"/>
+    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,454,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Text"/>
+    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,423,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Link"/>
+    <Button x:Name="btnTitlesDL" Content="Titles DL" HorizontalAlignment="Left" Height="29" Margin="18,490,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnTitlesDL_Click"/>
+    <Button x:Name="btnUndoDates" Content="Undo Dates" HorizontalAlignment="Left" Height="28" Margin="180,37,0,0" VerticalAlignment="Top" Width="95" Background="#FFD35483" Foreground="White" FontFamily="Arial" Click="btnUndoDates_Click" FontSize="15"/>
+    <Button x:Name="btnBullets_DL" Content="Bullets DL" HorizontalAlignment="Left" Height="29" Margin="93,490,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnBullets_DL_Click"/>
+    <Button x:Name="btnCopyNotepad4" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="268,490,0,0" VerticalAlignment="Top" Width="72" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad4_Click"/>
+    <Button x:Name="btnClearNotepad4" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="347,488,0,0" VerticalAlignment="Top" Width="78" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad4_Click"/>
 
 
 
