@@ -1,8 +1,18 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.VisualBasic.FileIO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+// ✅ ImageSharp aliases (fix ambiguity issues)
+using ISImage = SixLabors.ImageSharp.Image;
+using ISResizeMode = SixLabors.ImageSharp.Processing.ResizeMode;
+using ISSize = SixLabors.ImageSharp.Size;
 
 namespace MicroRenamerWPF
 {
@@ -14,9 +24,10 @@ namespace MicroRenamerWPF
     public MainWindow()
     {
       InitializeComponent();
-    }    
+    }
 
-    private void getFolderPath(TextBox txtBox) {
+    private void getFolderPath(TextBox txtBox)
+    {
 
       //This function sets the selected folder path as the text in the directory text box
 
@@ -39,7 +50,8 @@ namespace MicroRenamerWPF
       txtBox.Text = fullPathToFolder;
     }
 
-    private void RenameFiles(TextBox txtFolder){
+    private void RenameFiles(TextBox txtFolder)
+    {
 
       if (chkRemoveAllText.IsChecked == true)
       {
@@ -57,11 +69,13 @@ namespace MicroRenamerWPF
       {
         renameNumbers(txtFolder.Text);
       }
+      RenameShortFiles(txtFolder.Text);
 
-      
+
     }
     //Rename the files but remove all the text first, rename it with numbers only. not good for subfolders
-    private void renameNumbersOnly(String folder) {
+    private void renameNumbersOnly(String folder)
+    {
       if (!Directory.Exists(folder))
       {
         MessageBox.Show("Directory does not exist.");
@@ -104,7 +118,8 @@ namespace MicroRenamerWPF
 
 
     }
-    private void renameWithDateAndText(string folder){
+    private void renameWithDateAndText(string folder)
+    {
       string todaysDate = GetTodaysDate();
       string textToAdd = txtAddText.Text;
 
@@ -123,8 +138,8 @@ namespace MicroRenamerWPF
             string fileExtension = System.IO.Path.GetExtension(filePath);
             fileExtension = fileExtension.ToLower();
             if (fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip")
-            {        
-              
+            {
+
 
               //Add text if the option is selected
               if (chkAddText.IsChecked == false)
@@ -143,7 +158,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.ToLower();
 
               // ---------------------------------------***capitalize any main or lead items****
-              newFileName = renameMAINLEAD(newFileName);             
+              newFileName = renameMAINLEAD(newFileName);
 
               if (chkRemoveText.IsChecked == true)
               {
@@ -179,7 +194,8 @@ namespace MicroRenamerWPF
     {
       return string.Concat(DateTime.Now.Month.ToString("D2"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("yy"), "-");
     }
-    private string renameMAINLEAD(string str) {
+    private string renameMAINLEAD(string str)
+    {
       str = str.Replace("main", "MAIN");
       str = str.Replace("lead", "LEAD");
       str = str.Replace("slider", "SLIDER");
@@ -190,7 +206,8 @@ namespace MicroRenamerWPF
       str = str.Replace("feature", "FEATURE");
       return str;
     }
-    private void renameSpecial(string folder) {     
+    private void renameSpecial(string folder)
+    {
 
       // Check if the directory exists
       if (System.IO.Directory.Exists(folder))
@@ -319,9 +336,9 @@ namespace MicroRenamerWPF
             string newFileName = System.IO.Path.GetFileName(filePath);
             fileExtension = fileExtension.ToLower();
 
-            if (fileExtension != ".pdf" && 
-            fileExtension != ".docx" && 
-            fileExtension != ".doc" && 
+            if (fileExtension != ".pdf" &&
+            fileExtension != ".docx" &&
+            fileExtension != ".doc" &&
             fileExtension != ".zip")
             {
               // Construct the new file name
@@ -391,7 +408,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("~", "_");
               newFileName = newFileName.Replace("'", "_");
               newFileName = newFileName.Replace("__", "_");
-              newFileName = newFileName.Replace("__", "_");           
+              newFileName = newFileName.Replace("__", "_");
               newFileName = newFileName.Replace("_", " ");
               newFileName = newFileName.Replace("  ", " ");
               newFileName = newFileName.Replace("  ", " ");
@@ -427,6 +444,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("Jv", "JV");
               newFileName = newFileName.Replace("Parp", "PARP");
               newFileName = newFileName.Replace(GetTodaysDate(), ""); //remove the date if added by accident
+              //newFileName = newFileName.Replace(" Pdf", "");
               fileExtension = fileExtension.ToLower();
 
               newFileName = newFileName + fileExtension;
@@ -486,29 +504,29 @@ namespace MicroRenamerWPF
       getFolderPath(txtDirectory1);
     }
 
-    
+
 
     private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
     {
       RenameFiles(txtDirectory1);
     }
 
-   
+
 
     private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
     {
       renameVB(txtDirectory1.Text);
     }
 
-   
 
-    
-   
+
+
+
 
     private void btnRecycleBoth_Click(object sender, RoutedEventArgs e)
     {
       DeleteFilesInDirectory(txtDirectory1.Text);
-     
+
     }
 
     private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
@@ -529,7 +547,7 @@ namespace MicroRenamerWPF
     }
     private void btnCopyPresetClipboard1_Click(object sender, RoutedEventArgs e)
     {
-    //copy the text in the box 1 to the clipboard
+      //copy the text in the box 1 to the clipboard
       txtPresetClipboard1.SelectAll();
       txtPresetClipboard1.Copy();
     }
@@ -582,7 +600,7 @@ namespace MicroRenamerWPF
 
     private void btnPasteNotepad3_Click(object sender, RoutedEventArgs e)
     {
-    
+
       string cb = Clipboard.GetText();
       txtNotepad3.Text = cb;
     }
@@ -590,8 +608,9 @@ namespace MicroRenamerWPF
     {
       txtNotepad3.Clear();
     }
-    private void RemoveDateFromFiles(string folder, string textToRemove) {
-     
+    private void RemoveDateFromFiles(string folder, string textToRemove)
+    {
+
 
       if (!Directory.Exists(folder))
       {
@@ -639,7 +658,7 @@ namespace MicroRenamerWPF
 
     private void btnUndoDates_Click(object sender, RoutedEventArgs e)
     {
-    RemoveDateFromFiles(txtDirectory1.Text, GetTodaysDate());
+      RemoveDateFromFiles(txtDirectory1.Text, GetTodaysDate());
     }
 
     private void btnTitlesDL_Click(object sender, RoutedEventArgs e)
@@ -648,7 +667,7 @@ namespace MicroRenamerWPF
     }
     private void LoadFileNamesToTextBox(string folder)
     {
-     
+
 
       if (!Directory.Exists(folder))
       {
@@ -736,5 +755,250 @@ namespace MicroRenamerWPF
     {
       txtNotepad4.Clear();
     }
+
+    private void btnGetTitleTextWord_Click(object sender, RoutedEventArgs e)
+    {
+      RenameFiles(txtDirectory1);
+
+      string downloadsPath = Path.Combine(
+          Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+          "Downloads"
+      );
+
+      string filePath = null;
+
+      try
+      {
+        filePath = Directory.GetFiles(
+            downloadsPath,
+            "*.docx",
+            System.IO.SearchOption.AllDirectories
+        ).FirstOrDefault();
+      }
+      catch (UnauthorizedAccessException)
+      {
+        MessageBox.Show("Access denied to some folders.");
+      }
+
+      if (filePath == null)
+      {
+        MessageBox.Show("No Word documents found.");
+        return;
+      }
+
+      using (WordprocessingDocument doc = WordprocessingDocument.Open(filePath, false))
+      {
+        var paragraphs = doc.MainDocumentPart.Document.Body
+            .Elements<Paragraph>()
+            .Select(p => p.InnerText.Trim())
+            .Where(p => !string.IsNullOrWhiteSpace(p))
+            .ToList();
+
+        if (paragraphs.Count == 0)
+        {
+          MessageBox.Show("Document is empty.");
+          return;
+        }
+
+        // First paragraph = title
+        txtNotepad1.Text = paragraphs[0];
+
+        // Remaining paragraphs = body
+        StringBuilder body = new StringBuilder();
+
+        foreach (var p in paragraphs.Skip(1))
+        {
+          body.AppendLine(p);
+        }
+
+        txtNotepad2.Text = body.ToString().Trim();
+      }
+
+      //if we are calling this likely it is from one AE that only sends word. 
+      DeleteMacOSXFolders(downloadsPath);
+      ProcessImagesInDownloads();
+
+    }
+    //Delete any mac folders
+    private void DeleteMacOSXFolders(string rootPath)
+    {
+      try
+      {
+        var dirs = Directory.GetDirectories(
+            rootPath,
+            "__MACOSX",
+            System.IO.SearchOption.AllDirectories
+        );
+
+        foreach (var dir in dirs)
+        {
+          try
+          {
+            FileSystem.DeleteDirectory(
+                dir,
+                UIOption.OnlyErrorDialogs,
+                RecycleOption.SendToRecycleBin
+            );
+          }
+          catch (Exception ex)
+          {
+            Console.WriteLine($"Failed to delete {dir}: {ex.Message}");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Error scanning for __MACOSX folders: {ex.Message}");
+      }
+    }
+
+    private void ProcessImagesInDownloads()
+    {
+      this.Title += " - Processing...";
+
+      string downloadsPath = Path.Combine(
+      Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+      "Downloads"
+      );
+
+      string outputRoot = Path.Combine(downloadsPath, "JPEG");
+
+
+      // 🚫 Check for HEIC files first
+      var heicFiles = Directory.GetFiles(downloadsPath, "*.heic", System.IO.SearchOption.AllDirectories);
+      if (heicFiles.Length > 0)
+      {
+        MessageBox.Show("HEIC files detected. Please sue photoshop to process files.");
+        return;
+      }
+
+      var imageExtensions = new[] { "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.gif" };
+
+      var files = imageExtensions
+          .SelectMany(ext => Directory.GetFiles(
+              downloadsPath,
+              ext,
+              System.IO.SearchOption.AllDirectories))
+          .ToList();
+
+      foreach (var inputPath in files)
+      {
+        try
+        {
+          if (inputPath.Contains("\\JPEG\\")) continue;
+
+          using (var image = ISImage.Load(inputPath))
+          {
+            image.Mutate(x => x.Resize(new ResizeOptions
+            {
+              Mode = ISResizeMode.Max,
+              Size = new ISSize(800, 600)
+            }));
+
+            string relativePath = Path.GetRelativePath(downloadsPath, inputPath);
+            string outputPath = Path.Combine(outputRoot, Path.ChangeExtension(relativePath, ".jpg"));
+            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
+
+            image.Save(outputPath, new JpegEncoder
+            {
+              Quality = 95
+            });
+          }
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Skipped {inputPath}: {ex.Message}");
+        }
+      }
+
+      this.Title += " - Processing Complete";
+
+
+    } //end last function
+
+
+    private void RenameShortFiles(string folderPath)
+    {
+      string downloadsPath = Path.Combine(
+Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+"Downloads"
+);
+
+      string wordFile = Directory.GetFiles(
+          downloadsPath,
+          "*.docx",
+          System.IO.SearchOption.AllDirectories
+      ).FirstOrDefault();
+
+      string wordFileName = null;
+
+      if (!string.IsNullOrEmpty(wordFile))
+      {
+        wordFileName = Path.GetFileNameWithoutExtension(wordFile);
+
+        foreach (char c in Path.GetInvalidFileNameChars())
+          wordFileName = wordFileName.Replace(c.ToString(), "");
+      }
+
+      var files = Directory.GetFiles(folderPath, "*.jpg", System.IO.SearchOption.AllDirectories);
+
+      foreach (var file in files)
+      {
+        try
+        {
+          string directory = Path.GetDirectoryName(file);
+          string originalName = Path.GetFileNameWithoutExtension(file);
+
+          // Only process names with NO letters
+          if (!System.Text.RegularExpressions.Regex.IsMatch(originalName, "[a-zA-Z]"))
+          {
+            string numberSuffix = "";
+
+            // ✅ Handle double dash case (e.g. 040326--1)
+            if (originalName.Contains("--"))
+            {
+              var parts = originalName.Split(new[] { "--" }, StringSplitOptions.None);
+
+              if (parts.Length == 2 && parts[1].Length == 1 && char.IsDigit(parts[1][0]))
+              {
+                originalName = parts[0] + "-"; // keep first part with single dash
+                numberSuffix = parts[1];       // store number for later
+              }
+            }
+
+            string suffix;
+
+            if (!string.IsNullOrWhiteSpace(wordFileName))
+            {
+              suffix = wordFileName;
+            }
+            else
+            {
+              suffix = "story";
+            }
+
+            string newName = originalName + suffix + numberSuffix;
+            string newPath = Path.Combine(directory, newName + ".jpg");
+
+            int counter = 1;
+            while (File.Exists(newPath))
+            {
+              newPath = Path.Combine(directory, $"{newName}-{counter}.jpg");
+              counter++;
+            }
+
+            File.Move(file, newPath);
+          }
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Rename failed: {file} - {ex.Message}");
+        }
+      }
+    }
+
+
+
+    //end of form
   }
 }

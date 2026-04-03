@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "G65L1td3imw=",
+  "dgSpecHash": "I+e5Zb0tVN4=",
   "success": true,
   "projectFilePath": "E:\\PROJECTS\\MicroRenamer\\MicroRenamerWPF\\MicroRenamerWPF\\MicroRenamerWPF.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\admin\\.nuget\\packages\\documentformat.openxml\\3.5.1\\documentformat.openxml.3.5.1.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\documentformat.openxml.framework\\3.5.1\\documentformat.openxml.framework.3.5.1.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\sixlabors.imagesharp\\3.1.12\\sixlabors.imagesharp.3.1.12.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\system.io.packaging\\8.0.1\\system.io.packaging.8.0.1.nupkg.sha512"
+  ],
   "logs": []
 }

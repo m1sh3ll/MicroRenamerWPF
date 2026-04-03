@@ -3,3 +3,7 @@ E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.dll
 E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.deps.json
 E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.runtimeconfig.json
 E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\MicroRenamerWPF.pdb
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\DocumentFormat.OpenXml.dll
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\DocumentFormat.OpenXml.Framework.dll
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\SixLabors.ImageSharp.dll
+E:\Dropbox\_________Micro-Apps\MicroRenamerWPF\System.IO.Packaging.dll

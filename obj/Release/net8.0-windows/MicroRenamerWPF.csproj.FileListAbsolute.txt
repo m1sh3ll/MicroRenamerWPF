@@ -42,3 +42,9 @@ E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Release\net8.0-wind
 E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Release\net8.0-windows\MicroRenamerWPF.pdb
 E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Release\net8.0-windows\MicroRenamerWPF.genruntimeconfig.cache
 E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Release\net8.0-windows\ref\MicroRenamerWPF.dll
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\bin\Release\net8.0-windows\DocumentFormat.OpenXml.dll
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\bin\Release\net8.0-windows\DocumentFormat.OpenXml.Framework.dll
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\bin\Release\net8.0-windows\System.IO.Packaging.dll
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Release\net8.0-windows\MicroRenamerWPF.csproj.AssemblyReference.cache
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\obj\Release\net8.0-windows\MicroRen.7698750A.Up2Date
+E:\PROJECTS\MicroRenamer\MicroRenamerWPF\MicroRenamerWPF\bin\Release\net8.0-windows\SixLabors.ImageSharp.dll
