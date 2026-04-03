@@ -39,7 +39,6 @@ namespace MicroRenamerWPF
       txtDirectory1.Text = downloadsPath;
     }
 
-
     //The RENAME button
     private void RenameFiles(TextBox txtFolder)
     {
@@ -460,7 +459,6 @@ namespace MicroRenamerWPF
       }
     }
 
-
     private void DeleteFilesInDirectory(string directoryPath)
     {
       this.Title = "Micro Renamer for Windows - Syntax Communications";
@@ -506,13 +504,11 @@ namespace MicroRenamerWPF
       DeleteFilesInDirectory(txtDirectory1.Text);
       DeleteEmptyFoldersInDownloads();
     }
-
     private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
     {
       txtNotepad1.SelectAll();
       txtNotepad1.Copy();
     }
-
     private void btnCopyNotepad2_Click(object sender, RoutedEventArgs e)
     {
       txtNotepad2.SelectAll();
@@ -547,7 +543,6 @@ namespace MicroRenamerWPF
       txtPresetClipboard2.SelectAll();
       txtPresetClipboard2.Copy();
     }
-
     private void btnPasteNotepad1_Click(object sender, RoutedEventArgs e)
     {
       string cb = Clipboard.GetText();
@@ -632,7 +627,6 @@ namespace MicroRenamerWPF
       }
 
     }
-
 
     private void btnTitlesDL_Click(object sender, RoutedEventArgs e)
     {
@@ -788,8 +782,9 @@ namespace MicroRenamerWPF
         txtNotepad2.Text = body.ToString().Trim();
       }
 
-      //sometimes files contain the press release date + other info
-      SplitTextboxContent();
+      if (txtNotepad2.Text.Contains("release")){
+        //sometimes files contain the press release date + other info
+        SplitTextboxContent(); }
 
       //if AE sends MacOS files. 
       DeleteMacOSXFolders(downloadsPath);
@@ -849,8 +844,7 @@ namespace MicroRenamerWPF
       txtNotepad2.Text = string.Join(Environment.NewLine, lines.Skip(1));
 
     }
-
-    //Delete any MAC folders
+        
     private void DeleteMacOSXFolders(string rootPath)
     {
       try

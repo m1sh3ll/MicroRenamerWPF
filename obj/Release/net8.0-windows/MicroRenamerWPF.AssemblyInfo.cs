@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MicroRenamerWPF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+42f28bb329cdf5c14763ab857ba76dbb1e4c9c8b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+264dca32e463a15f8069a68b150fef4e7816d0a6")]
 [assembly: System.Reflection.AssemblyProductAttribute("MicroRenamerWPF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MicroRenamerWPF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
