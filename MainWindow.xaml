@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MicroRenamerWPF"
         mc:Ignorable="d"
-        Title="Micro Renamer for Windows - Syntax Communications" Height="650" Width="930">
+        Title="Micro Renamer for Windows - Syntax Communications" Height="650" Width="930" Loaded="Window_Loaded">
   <Window.Background>
     <ImageBrush Opacity="0.6"/>
   </Window.Background>
@@ -22,7 +22,7 @@
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="470,292,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Directory #1"/>
     <TextBlock x:Name="lblNotepads" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="18,75,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Notepads"/>
     <TextBlock x:Name="lblPresetClipboardTexts" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="474,363,0,0" Foreground="White" FontFamily="Arial" FontSize="24" Text="Preset Clipboard Texts"/>
-    <TextBox x:Name="txtDirectory1" HorizontalAlignment="Left" Height="25" Margin="470,312,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" VerticalContentAlignment="Center" Text="C:\Users\Admin\Downloads" Padding="2,0,0,0"/>
+    <TextBox x:Name="txtDirectory1" HorizontalAlignment="Left" Height="25" Margin="470,312,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="222" VerticalContentAlignment="Center" Padding="2,0,0,0"/>
     <TextBox x:Name="txtPresetClipboard1" HorizontalAlignment="Left" Height="25" Margin="474,437,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all set!" Padding="2,0,0,0"/>
     <TextBox x:Name="txtPresetClipboard2" HorizontalAlignment="Left" Height="25" Margin="474,474,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="270" VerticalContentAlignment="Center" Text="This is all scheduled!" Padding="2,0,0,0"/>
     <TextBox x:Name="txtAddText" HorizontalAlignment="Left" Height="25" Margin="521,202,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="314" VerticalContentAlignment="Center" Padding="2,0,0,0"/>
@@ -39,7 +39,6 @@
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="521,144,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Number Items"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="521,178,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Add Text"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="521,240,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Remove Text"/>
-    <Button x:Name="btnOpenFolderDir1" Content="..." HorizontalAlignment="Left" Height="28" Margin="696,311,0,0" VerticalAlignment="Top" Width="48" Background="#FFD35483" Foreground="White" FontFamily="Arial" Click="btnOpenFolderDir1_Click"/>
     <Button x:Name="btnRecycleBoth" Content="Recycle" HorizontalAlignment="Left" Height="28" Margin="280,67,0,0" VerticalAlignment="Top" Width="154" FontFamily="Arial" Background="#FFFC7A20"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRecycleBoth_Click"/>
     <Button x:Name="btnRenameDir1" Content="Rename" HorizontalAlignment="Left" Height="29" Margin="280,5,0,0" VerticalAlignment="Top" Width="154" FontFamily="Arial" Background="#FF3DAEB6"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnRenameDir1_Click"/>
     <Button x:Name="btnTitleCaseDir1" Content="Title Case" HorizontalAlignment="Left" Height="29" Margin="280,36,0,0" VerticalAlignment="Top" Width="154" FontFamily="Arial" Background="#FF8AAD2A"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnTitleCaseDir1_Click" RenderTransformOrigin="1.722,0.449"/>

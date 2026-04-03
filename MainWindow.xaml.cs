@@ -1,14 +1,18 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.VisualBasic.FileIO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using static System.Net.Mime.MediaTypeNames;
+
 // ✅ ImageSharp aliases (fix ambiguity issues)
 using ISImage = SixLabors.ImageSharp.Image;
 using ISResizeMode = SixLabors.ImageSharp.Processing.ResizeMode;
@@ -25,33 +29,21 @@ namespace MicroRenamerWPF
     {
       InitializeComponent();
     }
-
-    private void getFolderPath(TextBox txtBox)
+    private void Window_Loaded(object sender, RoutedEventArgs e)
     {
+      string downloadsPath = Path.Combine(
+          Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+          "Downloads"
+      );
 
-      //This function sets the selected folder path as the text in the directory text box
-
-      Microsoft.Win32.OpenFolderDialog dialog = new();
-
-      dialog.Multiselect = false;
-      dialog.Title = "Select textToAdd folder";
-
-      // Show open folder dialog box
-      bool? result = dialog.ShowDialog();
-
-      string fullPathToFolder = "";
-      // Process open folder dialog box results
-      if (result == true)
-      {
-        // Get the selected folder
-        fullPathToFolder = dialog.FolderName;
-      }
-
-      txtBox.Text = fullPathToFolder;
+      txtDirectory1.Text = downloadsPath;
     }
 
+
+    //The RENAME button
     private void RenameFiles(TextBox txtFolder)
     {
+      this.Title = "Micro Renamer for Windows - Syntax Communications";
 
       if (chkRemoveAllText.IsChecked == true)
       {
@@ -372,6 +364,7 @@ namespace MicroRenamerWPF
 
     private void renameVB(string folder)
     {
+      this.Title = "Micro Renamer for Windows - Syntax Communications";
       string folderPath = folder;
 
       if (System.IO.Directory.Exists(folderPath))
@@ -470,6 +463,7 @@ namespace MicroRenamerWPF
 
     private void DeleteFilesInDirectory(string directoryPath)
     {
+      this.Title = "Micro Renamer for Windows - Syntax Communications";
       try
       {
         // Check if the directory exists
@@ -497,36 +491,20 @@ namespace MicroRenamerWPF
       }
     }
 
-
-    private void btnOpenFolderDir1_Click(object sender, RoutedEventArgs e)
-    {
-      //gets the selected folder path
-      getFolderPath(txtDirectory1);
-    }
-
-
-
     private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
     {
       RenameFiles(txtDirectory1);
     }
-
-
 
     private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
     {
       renameVB(txtDirectory1.Text);
     }
 
-
-
-
-
-
     private void btnRecycleBoth_Click(object sender, RoutedEventArgs e)
     {
       DeleteFilesInDirectory(txtDirectory1.Text);
-
+      DeleteEmptyFoldersInDownloads();
     }
 
     private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
@@ -608,58 +586,53 @@ namespace MicroRenamerWPF
     {
       txtNotepad3.Clear();
     }
-    private void RemoveDateFromFiles(string folder, string textToRemove)
-    {
-
-
-      if (!Directory.Exists(folder))
-      {
-        MessageBox.Show("Directory does not exist.");
-        return;
-      }
-
-      var files = Directory.GetFiles(folder);
-
-      foreach (string filePath in files)
-      {
-        try
-        {
-          string directory = Path.GetDirectoryName(filePath);
-          string extension = Path.GetExtension(filePath);
-          string fileNameWithoutExt = Path.GetFileNameWithoutExtension(filePath);
-
-          // Remove the target text
-          string newName = fileNameWithoutExt.Replace(textToRemove, "");
-
-          // Optional cleanup (nice to have)
-          newName = newName.Replace("__", "_")
-                           .Replace("--", "-")
-                           .Trim('_', '-', ' ');
-
-          string newFileName = newName + extension;
-          string newFilePath = Path.Combine(directory, newFileName);
-
-          // Skip if nothing changed
-          if (filePath == newFilePath)
-            continue;
-
-          // Prevent overwrite
-          if (!File.Exists(newFilePath))
-          {
-            File.Move(filePath, newFilePath);
-          }
-        }
-        catch (Exception ex)
-        {
-          MessageBox.Show($"Error renaming file: {ex.Message}");
-        }
-      }
-    }
 
     private void btnUndoDates_Click(object sender, RoutedEventArgs e)
     {
       RemoveDateFromFiles(txtDirectory1.Text, GetTodaysDate());
     }
+
+    private void RemoveDateFromFiles(string folderPath, string datePrefix)
+    {
+      var files = Directory.GetFiles(
+      folderPath,
+      ".",
+      System.IO.SearchOption.AllDirectories
+      );
+
+      foreach (var file in files)
+      {
+        try
+        {
+          string directory = Path.GetDirectoryName(file);
+          string fileName = Path.GetFileNameWithoutExtension(file);
+          string extension = Path.GetExtension(file);
+
+          // Only remove if filename starts with today's date
+          if (!fileName.StartsWith(datePrefix))
+            continue;
+
+          string newName = fileName.Substring(datePrefix.Length);
+
+          string newPath = Path.Combine(directory, newName + extension);
+
+          int counter = 1;
+          while (File.Exists(newPath))
+          {
+            newPath = Path.Combine(directory, $"{newName}-{counter}{extension}");
+            counter++;
+          }
+
+          File.Move(file, newPath);
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Rename failed: {file} - {ex.Message}");
+        }
+      }
+
+    }
+
 
     private void btnTitlesDL_Click(object sender, RoutedEventArgs e)
     {
@@ -758,6 +731,7 @@ namespace MicroRenamerWPF
 
     private void btnGetTitleTextWord_Click(object sender, RoutedEventArgs e)
     {
+
       RenameFiles(txtDirectory1);
 
       string downloadsPath = Path.Combine(
@@ -814,12 +788,69 @@ namespace MicroRenamerWPF
         txtNotepad2.Text = body.ToString().Trim();
       }
 
-      //if we are calling this likely it is from one AE that only sends word. 
+      //sometimes files contain the press release date + other info
+      SplitTextboxContent();
+
+      //if AE sends MacOS files. 
       DeleteMacOSXFolders(downloadsPath);
+
+      //shrink images not .heic to 800x600
       ProcessImagesInDownloads();
 
     }
-    //Delete any mac folders
+
+    private void SplitTextboxContent()
+    {
+      var lines = txtNotepad2.Text
+      .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
+      .Select(l => l.Trim())
+      .Where(l => !string.IsNullOrWhiteSpace(l))
+      .ToList();
+
+      if (lines.Count == 0)
+        return;
+
+      // Find first "real" title line
+      int titleIndex = lines.FindIndex(l =>
+          !l.ToLower().Contains("press release") &&
+          !l.ToLower().Contains("for immediate release") &&
+          !l.Contains("www.") &&
+          l.Length > 20
+      );
+
+      if (titleIndex == -1)
+        titleIndex = 0;
+
+      // Set title
+      txtNotepad1.Text = lines[titleIndex];
+
+      // Set body
+      txtNotepad2.Text = string.Join(Environment.NewLine,
+          lines.Skip(titleIndex + 1));
+
+      //part2
+      lines = txtNotepad2.Text
+      .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
+      .Select(l => l.Trim())
+      .Where(l =>
+      !string.IsNullOrWhiteSpace(l) &&
+      !l.ToLower().Contains("@syntaxny.com") // remove email line
+      )
+      .ToList();
+
+
+      if (lines.Count == 0)
+        return;
+
+      // First line = title
+      txtNotepad1.Text = lines[0];
+
+      // Remaining = body
+      txtNotepad2.Text = string.Join(Environment.NewLine, lines.Skip(1));
+
+    }
+
+    //Delete any MAC folders
     private void DeleteMacOSXFolders(string rootPath)
     {
       try
@@ -854,6 +885,8 @@ namespace MicroRenamerWPF
 
     private void ProcessImagesInDownloads()
     {
+      this.Title = "Micro Renamer for Windows - Syntax Communications";
+
       this.Title += " - Processing...";
 
       string downloadsPath = Path.Combine(
@@ -913,9 +946,7 @@ namespace MicroRenamerWPF
 
       this.Title += " - Processing Complete";
 
-
     } //end last function
-
 
     private void RenameShortFiles(string folderPath)
     {
@@ -997,6 +1028,43 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
       }
     }
 
+    private void DeleteEmptyFoldersInDownloads()
+    {
+      string downloadsPath = Path.Combine(
+      Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+      "Downloads"
+      );
+
+
+      DeleteEmptyDirectories(downloadsPath);
+
+
+    }
+
+    private void DeleteEmptyDirectories(string path)
+    {
+      foreach (var directory in Directory.GetDirectories(path))
+      {
+        // First clean subdirectories
+        DeleteEmptyDirectories(directory);
+
+
+        // Then check if current directory is empty
+        if (!Directory.EnumerateFileSystemEntries(directory).Any())
+        {
+          try
+          {
+            Directory.Delete(directory);
+          }
+          catch (Exception ex)
+          {
+            Console.WriteLine($"Could not delete {directory}: {ex.Message}");
+          }
+        }
+      }
+
+
+    }
 
 
     //end of form
