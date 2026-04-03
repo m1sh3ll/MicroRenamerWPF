@@ -938,7 +938,9 @@ namespace MicroRenamerWPF
         }
       }
 
-      this.Title += " - Processing Complete";
+      this.Title = "Micro Renamer for Windows - Syntax Communications";
+
+      this.Title += " - Processing Complete...";
 
     } //end last function
 
@@ -1042,7 +1044,6 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
         // First clean subdirectories
         DeleteEmptyDirectories(directory);
 
-
         // Then check if current directory is empty
         if (!Directory.EnumerateFileSystemEntries(directory).Any())
         {
@@ -1056,9 +1057,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
           }
         }
       }
-
-
-    }
+    }//end last function
 
 
     //end of form
