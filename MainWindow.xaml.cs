@@ -162,7 +162,7 @@ namespace MicroRenamerWPF
               }
               // Combine the new file name with the original directory
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
-newFilePath = newFilePath.Replace("--", "-");
+              newFilePath = newFilePath.Replace("--", "-");
               // Rename the file
               System.IO.File.Move(filePath, newFilePath);
               chkRemoveAllText.IsChecked = false;
@@ -266,7 +266,7 @@ newFilePath = newFilePath.Replace("--", "-");
               newFileName = newFileName.Replace("__", "_");
               newFileName = newFileName.Replace("__", "_");
               newFileName = newFileName.Replace("--", "-");
-              
+
               newFileName = newFileName.ToLower();
 
               fileExtension = fileExtension.ToLower();
@@ -437,7 +437,7 @@ newFilePath = newFilePath.Replace("--", "-");
               newFileName = newFileName.Replace("12Th", "12th");
               newFileName = newFileName.Replace("Jv", "JV");
               newFileName = newFileName.Replace("Parp", "PARP");
-              
+
               newFileName = newFileName.Replace(GetTodaysDate(), ""); //remove the date if added by accident
               //newFileName = newFileName.Replace(" Pdf", "");
               fileExtension = fileExtension.ToLower();
@@ -759,34 +759,56 @@ newFilePath = newFilePath.Replace("--", "-");
       using (WordprocessingDocument doc = WordprocessingDocument.Open(filePath, false))
       {
         var paragraphs = doc.MainDocumentPart.Document.Body
-            .Elements<Paragraph>()
-            .Select(p => p.InnerText.Trim())
-            .Where(p => !string.IsNullOrWhiteSpace(p))
-            .ToList();
+        .Elements<Paragraph>()
+        .Select(p => p.InnerText.Trim())
+        .Where(p => !string.IsNullOrWhiteSpace(p))
+        .ToList();
 
-        if (paragraphs.Count == 0)
-        {
-          MessageBox.Show("Document is empty.");
+
+if (paragraphs.Count == 0)
           return;
-        }
 
-        // First paragraph = title
-        txtNotepad1.Text = paragraphs[0];
+        int startIndex = 0;
 
-        // Remaining paragraphs = body
-        StringBuilder body = new StringBuilder();
+        // 🥇 Try to find syntaxny.com anchor
+        int syntaxIndex = paragraphs.FindIndex(p => p.ToLower().Contains("syntaxny.com"));
 
-        foreach (var p in paragraphs.Skip(1))
+        if (syntaxIndex != -1)
         {
-          body.AppendLine(p);
+          startIndex = syntaxIndex + 1;
         }
 
-        txtNotepad2.Text = body.ToString().Trim();
+        // Work from filtered list
+        var filtered = paragraphs.Skip(startIndex).ToList();
+
+        // 🥇/🥈 Find first real title
+        int titleIndex = filtered.FindIndex(p =>
+            p.Length > 20 &&                              // real sentence
+            !p.Contains("@") &&                           // not email
+            !p.Contains("www.") &&                        // not website
+            !p.ToUpper().Equals(p) &&                     // not ALL CAPS
+            !System.Text.RegularExpressions.Regex.IsMatch(p, @"^\d") // not numeric start
+        );
+
+        if (titleIndex == -1)
+          titleIndex = 0;
+
+        txtNotepad1.Text = filtered[titleIndex];
+
+        txtNotepad2.Text = string.Join(Environment.NewLine,
+            filtered.Skip(titleIndex + 1));
+
+
+}
+
+
+
+      //sometimes files contain the press release date + other info
+      if (txtNotepad2.Text.Contains("syntaxny"))
+      {
+        SplitTextboxContent();
       }
 
-      if (txtNotepad2.Text.Contains("release")){
-        //sometimes files contain the press release date + other info
-        SplitTextboxContent(); }
 
       //if AE sends MacOS files. 
       DeleteMacOSXFolders(downloadsPath);
@@ -796,57 +818,8 @@ newFilePath = newFilePath.Replace("--", "-");
 
     }
 
-    private void SplitTextboxContent()
-    {
-      var lines = txtNotepad2.Text
-      .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
-      .Select(l => l.Trim())
-      .Where(l => !string.IsNullOrWhiteSpace(l))
-      .ToList();
-
-      if (lines.Count == 0)
-        return;
-
-      // Find first "real" title line
-      int titleIndex = lines.FindIndex(l =>
-          !l.ToLower().Contains("press release") &&
-          !l.ToLower().Contains("for immediate release") &&
-          !l.Contains("www.") &&
-          l.Length > 20
-      );
-
-      if (titleIndex == -1)
-        titleIndex = 0;
-
-      // Set title
-      txtNotepad1.Text = lines[titleIndex];
-
-      // Set body
-      txtNotepad2.Text = string.Join(Environment.NewLine,
-          lines.Skip(titleIndex + 1));
-
-      //part2
-      lines = txtNotepad2.Text
-      .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
-      .Select(l => l.Trim())
-      .Where(l =>
-      !string.IsNullOrWhiteSpace(l) &&
-      !l.ToLower().Contains("@syntaxny.com") // remove email line
-      )
-      .ToList();
 
 
-      if (lines.Count == 0)
-        return;
-
-      // First line = title
-      txtNotepad1.Text = lines[0];
-
-      // Remaining = body
-      txtNotepad2.Text = string.Join(Environment.NewLine, lines.Skip(1));
-
-    }
-        
     private void DeleteMacOSXFolders(string rootPath)
     {
       try
@@ -948,10 +921,10 @@ newFilePath = newFilePath.Replace("--", "-");
 
     private void RenameShortFiles(string folderPath)
     {
-//      string downloadsPath = Path.Combine(
-//Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-//"Downloads"
-//);
+      //      string downloadsPath = Path.Combine(
+      //Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+      //"Downloads"
+      //);
 
       // Get Word doc filename
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -1007,8 +980,8 @@ newFilePath = newFilePath.Replace("--", "-");
               ? wordFileName
               : "story";
 
-          string newName = datePart + baseName + "-"+numberSuffix;
-         
+          string newName = datePart + baseName + "-" + numberSuffix;
+
           string newPath = Path.Combine(directory, newName + extension);
 
           int counter = 1;
@@ -1029,7 +1002,7 @@ newFilePath = newFilePath.Replace("--", "-");
         }
       }
 
-      
+
     }
 
     private void DeleteEmptyFoldersInDownloads()
@@ -1092,6 +1065,37 @@ newFilePath = newFilePath.Replace("--", "-");
         btnCAPS.Content = "CAPS";
         textMode = 0;
       }
+    }
+
+    private void SplitTextboxContent()
+    {
+      var lines = txtNotepad2.Text
+      .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
+      .Select(l => l.Trim())
+      .Where(l => !string.IsNullOrWhiteSpace(l))
+      .ToList();
+
+
+      if (lines.Count == 0)
+        return;
+
+      int titleIndex = lines.FindIndex(l =>
+          l.Length > 20 &&                                // real sentence
+          !l.Contains("@") &&                             // not email
+          !l.Contains("www.") &&                          // not website
+          !l.ToUpper().Equals(l) &&                       // not ALL CAPS
+          !System.Text.RegularExpressions.Regex.IsMatch(l, @"^\d+$") // not numbers
+      );
+
+      if (titleIndex == -1)
+        titleIndex = 0;
+
+      txtNotepad1.Text = lines[titleIndex];
+
+      txtNotepad2.Text = string.Join(Environment.NewLine,
+          lines.Skip(titleIndex + 1));
+
+
     }
 
 
