@@ -71,9 +71,10 @@
     <Button x:Name="btnTitlesDL" Content="Titles DL" HorizontalAlignment="Left" Height="29" Margin="18,490,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnTitlesDL_Click"/>
     <Button x:Name="btnUndoDates" Content="Undo Dates" HorizontalAlignment="Left" Height="28" Margin="180,37,0,0" VerticalAlignment="Top" Width="95" Background="#FFD35483" Foreground="White" FontFamily="Arial" Click="btnUndoDates_Click" FontSize="15"/>
     <Button x:Name="btnBullets_DL" Content="Bullets DL" HorizontalAlignment="Left" Height="29" Margin="93,490,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnBullets_DL_Click"/>
-    <Button x:Name="btnCopyNotepad4" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="279,489,0,0" VerticalAlignment="Top" Width="72" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad4_Click"/>
-    <Button x:Name="btnClearNotepad4" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="356,489,0,0" VerticalAlignment="Top" Width="78" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad4_Click"/>
+    <Button x:Name="btnCopyNotepad4" Content="Copy" HorizontalAlignment="Left" Height="29" Margin="319,489,0,0" VerticalAlignment="Top" Width="51" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad4_Click"/>
+    <Button x:Name="btnClearNotepad4" Content="Clear" HorizontalAlignment="Left" Height="29" Margin="375,489,0,0" VerticalAlignment="Top" Width="58" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnClearNotepad4_Click" RenderTransformOrigin="1.379,0.518"/>
     <Button x:Name="btnGetTitleTextWord" Content="Word Get" HorizontalAlignment="Left" Height="29" Margin="180,490,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnGetTitleTextWord_Click"/>
+    <Button x:Name="btnCAPS" Content="CAPS" HorizontalAlignment="Left" Height="29" Margin="263,490,0,0" VerticalAlignment="Top" Width="51" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCAPS_Click"/>
 
 
 

@@ -25,6 +25,7 @@ namespace MicroRenamerWPF
   /// </summary>
   public partial class MainWindow : Window
   {
+    private int textMode = 0; // 0 = CAPS, 1 = lower, 2 = Title
     public MainWindow()
     {
       InitializeComponent();
@@ -40,27 +41,27 @@ namespace MicroRenamerWPF
     }
 
     //The RENAME button
-    private void RenameFiles(TextBox txtFolder)
+    private void RenameFiles()
     {
       this.Title = "Micro Renamer for Windows - Syntax Communications";
 
       if (chkRemoveAllText.IsChecked == true)
       {
-        renameNumbersOnly(txtFolder.Text); //remove all text and number each file (Add text in the "add text box" to add text)
+        renameNumbersOnly(txtDirectory1.Text); //remove all text and number each file (Add text in the "add text box" to add text)
       }
       if (chkAddDate.IsChecked == true || chkAddText.IsChecked == true)
       {
-        renameWithDateAndText(txtFolder.Text);
+        renameWithDateAndText(txtDirectory1.Text);
       }
       if (chkRemoveSpecial.IsChecked == true)
       {
-        renameSpecial(txtFolder.Text);
+        renameSpecial(txtDirectory1.Text);
       }
       if (chkNumberItems.IsChecked == true)
       {
-        renameNumbers(txtFolder.Text);
+        renameNumbers(txtDirectory1.Text);
       }
-      RenameShortFiles(txtFolder.Text);
+      RenameShortFiles(txtDirectory1.Text);
 
 
     }
@@ -161,7 +162,7 @@ namespace MicroRenamerWPF
               }
               // Combine the new file name with the original directory
               string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
-
+newFilePath = newFilePath.Replace("--", "-");
               // Rename the file
               System.IO.File.Move(filePath, newFilePath);
               chkRemoveAllText.IsChecked = false;
@@ -264,7 +265,8 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("--", "-");
               newFileName = newFileName.Replace("__", "_");
               newFileName = newFileName.Replace("__", "_");
-
+              newFileName = newFileName.Replace("--", "-");
+              
               newFileName = newFileName.ToLower();
 
               fileExtension = fileExtension.ToLower();
@@ -435,6 +437,7 @@ namespace MicroRenamerWPF
               newFileName = newFileName.Replace("12Th", "12th");
               newFileName = newFileName.Replace("Jv", "JV");
               newFileName = newFileName.Replace("Parp", "PARP");
+              
               newFileName = newFileName.Replace(GetTodaysDate(), ""); //remove the date if added by accident
               //newFileName = newFileName.Replace(" Pdf", "");
               fileExtension = fileExtension.ToLower();
@@ -491,7 +494,7 @@ namespace MicroRenamerWPF
 
     private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
     {
-      RenameFiles(txtDirectory1);
+      RenameFiles();
     }
 
     private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
@@ -726,22 +729,21 @@ namespace MicroRenamerWPF
     private void btnGetTitleTextWord_Click(object sender, RoutedEventArgs e)
     {
 
-      RenameFiles(txtDirectory1);
+      RenameFiles();
 
-      string downloadsPath = Path.Combine(
-          Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-          "Downloads"
-      );
+      string downloadsPath = txtDirectory1.Text;
 
       string filePath = null;
 
       try
       {
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
         filePath = Directory.GetFiles(
             downloadsPath,
             "*.docx",
             System.IO.SearchOption.AllDirectories
         ).FirstOrDefault();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
       }
       catch (UnauthorizedAccessException)
       {
@@ -946,15 +948,15 @@ namespace MicroRenamerWPF
 
     private void RenameShortFiles(string folderPath)
     {
-      string downloadsPath = Path.Combine(
-Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-"Downloads"
-);
+//      string downloadsPath = Path.Combine(
+//Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+//"Downloads"
+//);
 
       // Get Word doc filename
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
       string wordFile = Directory.GetFiles(
-          downloadsPath,
+          folderPath,
           "*.docx",
           System.IO.SearchOption.AllDirectories
       ).FirstOrDefault();
@@ -1006,7 +1008,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
               : "story";
 
           string newName = datePart + baseName + "-"+numberSuffix;
-
+         
           string newPath = Path.Combine(directory, newName + extension);
 
           int counter = 1;
@@ -1026,6 +1028,8 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
           Console.WriteLine($"Rename failed: {file} - {ex.Message}");
         }
       }
+
+      
     }
 
     private void DeleteEmptyFoldersInDownloads()
@@ -1062,6 +1066,33 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
         }
       }
     }//end last function
+
+    private void btnCAPS_Click(object sender, RoutedEventArgs e)
+    {
+      if (textMode == 0)
+      {
+        // CAPS
+        txtNotepad4.Text = txtNotepad4.Text.ToUpper();
+        btnCAPS.Content = "lower";
+        textMode = 1;
+      }
+      else if (textMode == 1)
+      {
+        // lower
+        txtNotepad4.Text = txtNotepad4.Text.ToLower();
+        btnCAPS.Content = "Title";
+        textMode = 2;
+      }
+      else
+      {
+        // Title Case
+        var textInfo = CultureInfo.CurrentCulture.TextInfo;
+        txtNotepad4.Text = textInfo.ToTitleCase(txtNotepad4.Text.ToLower());
+
+        btnCAPS.Content = "CAPS";
+        textMode = 0;
+      }
+    }
 
 
     //end of form
