@@ -951,12 +951,14 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
 "Downloads"
 );
 
+      // Get Word doc filename
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
       string wordFile = Directory.GetFiles(
           downloadsPath,
           "*.docx",
           System.IO.SearchOption.AllDirectories
       ).FirstOrDefault();
-
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
       string wordFileName = null;
 
       if (!string.IsNullOrEmpty(wordFile))
@@ -967,53 +969,55 @@ Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
           wordFileName = wordFileName.Replace(c.ToString(), "");
       }
 
-      var files = Directory.GetFiles(folderPath, "*.jpg", System.IO.SearchOption.AllDirectories);
+      var files = Directory.GetFiles(folderPath, "*.*", System.IO.SearchOption.AllDirectories);
 
       foreach (var file in files)
       {
         try
         {
           string directory = Path.GetDirectoryName(file);
-          string originalName = Path.GetFileNameWithoutExtension(file);
+          string fileName = Path.GetFileNameWithoutExtension(file);
+          string extension = Path.GetExtension(file);
 
-          // Only process names with NO letters
-          if (!System.Text.RegularExpressions.Regex.IsMatch(originalName, "[a-zA-Z]"))
+          string datePart = "";
+          string remainder = fileName;
+
+          // ✅ If it starts with a date, separate it
+          if (System.Text.RegularExpressions.Regex.IsMatch(fileName, @"^\d{6}-"))
           {
-            string numberSuffix = "";
+            datePart = fileName.Substring(0, 7); // "040626-"
+            remainder = fileName.Substring(7);
+          }
 
-            // ✅ Handle double dash case (e.g. 040326--1)
-            if (originalName.Contains("--"))
-            {
-              var parts = originalName.Split(new[] { "--" }, StringSplitOptions.None);
+          string numberSuffix = "";
 
-              if (parts.Length == 2 && parts[1].Length == 1 && char.IsDigit(parts[1][0]))
-              {
-                originalName = parts[0] + "-"; // keep first part with single dash
-                numberSuffix = parts[1];       // store number for later
-              }
-            }
+          // If remainder is single digit → move it
+          if (remainder.Length == 1 && char.IsDigit(remainder[0]))
+          {
+            numberSuffix = remainder;
+          }
+          else if (!string.IsNullOrWhiteSpace(remainder))
+          {
+            continue; // skip anything else
+          }
 
-            string suffix;
+          string baseName = !string.IsNullOrWhiteSpace(wordFileName)
+              ? wordFileName
+              : "story";
 
-            if (!string.IsNullOrWhiteSpace(wordFileName))
-            {
-              suffix = wordFileName;
-            }
-            else
-            {
-              suffix = "story";
-            }
+          string newName = datePart + baseName + "-"+numberSuffix;
 
-            string newName = originalName + suffix + numberSuffix;
-            string newPath = Path.Combine(directory, newName + ".jpg");
+          string newPath = Path.Combine(directory, newName + extension);
 
-            int counter = 1;
-            while (File.Exists(newPath))
-            {
-              newPath = Path.Combine(directory, $"{newName}-{counter}.jpg");
-              counter++;
-            }
+          int counter = 1;
+          while (File.Exists(newPath))
+          {
+            newPath = Path.Combine(directory, $"{datePart}{baseName}{numberSuffix}-{counter}{extension}");
+            counter++;
+          }
 
+          if (file != newPath)
+          {
             File.Move(file, newPath);
           }
         }
