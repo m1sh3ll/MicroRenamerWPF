@@ -1098,6 +1098,19 @@ if (paragraphs.Count == 0)
 
     }
 
+    private void btnGetBullet_Click(object sender, RoutedEventArgs e)
+    {
+      string link = txtHTMLLink.Text.Trim();
+      string text = txtHTMLText.Text.Trim();
+
+      if (string.IsNullOrWhiteSpace(link) || string.IsNullOrWhiteSpace(text))
+        return;
+
+      string html = $"<li><a href=\"{link}\">{text}</a></li>";
+
+      txtNotepad4.Text = html;
+    }
+
 
     //end of form
   }

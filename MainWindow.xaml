@@ -64,7 +64,7 @@
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="689,178,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Remove All Text First"/>
     <TextBox x:Name="txtHTMLLink" HorizontalAlignment="Left" Height="25" Margin="52,420,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="307" VerticalContentAlignment="Center" Padding="2,0,0,0"/>
     <TextBox x:Name="txtHTMLText" HorizontalAlignment="Left" Height="25" Margin="52,450,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="307" VerticalContentAlignment="Center" Padding="2,0,0,0" RenderTransformOrigin="0.697,-0.439"/>
-    <Button x:Name="btnGetBullet" Content="Bullet" HorizontalAlignment="Left" Height="29" Margin="364,418,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnCopyNotepad3_Click"/>
+    <Button x:Name="btnGetBullet" Content="Bullet" HorizontalAlignment="Left" Height="29" Margin="364,418,0,0" VerticalAlignment="Top" Width="70" FontFamily="Arial" Background="#FF1A85D7"  FontSize="15" Padding="1,1,1,1" Foreground="White" Click="btnGetBullet_Click"/>
     <TextBox x:Name="txtNotepad4" Margin="15,523,466,13" TextWrapping="Wrap" Background="White" Width="419" Padding="2,0,0,0"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,454,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Text"/>
     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="19,423,0,0" Foreground="White" FontFamily="Arial" FontSize="15" Text="Link"/>
