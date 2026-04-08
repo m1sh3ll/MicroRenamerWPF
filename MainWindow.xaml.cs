@@ -6,6 +6,7 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 
 // ✅ ImageSharp aliases (fix ambiguity issues)
@@ -724,8 +725,11 @@ namespace MicroRenamerWPF
     //btn For the WORD GET
     private void btnGetTitleTextWord_Click(object sender, RoutedEventArgs e)
     {
-
-      string downloadsPath = txtDirectory1.Text;
+      string downloadsPath = Path.Combine(
+  Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+  "Downloads"
+  );
+      ExtractAllZipsInDownloads();
 
       string filePath = null;
 
@@ -1124,36 +1128,33 @@ namespace MicroRenamerWPF
       txtNotepad4.Text = html;
     }
 
-
-
-    private void DeleteJPEGFolder()
+    private void ExtractAllZipsInDownloads()
     {
       string downloadsPath = Path.Combine(
       Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
       "Downloads"
       );
 
+      var zipFiles = Directory.GetFiles(downloadsPath, "*.zip");
 
-      string jpegPath = Path.Combine(downloadsPath, "JPEG");
-
-      if (Directory.Exists(jpegPath))
+      foreach (var zip in zipFiles)
       {
         try
         {
-          FileSystem.DeleteDirectory(
-              jpegPath,
-              UIOption.OnlyErrorDialogs,
-              RecycleOption.SendToRecycleBin
-          );
+          // Extract to same folder
+          ZipFile.ExtractToDirectory(zip, downloadsPath, true);
         }
         catch (Exception ex)
         {
-          MessageBox.Show($"Could not delete folder: {ex.Message}");
+          Console.WriteLine($"Failed to extract {zip}: {ex.Message}");
         }
       }
 
 
     }
+
+
+
 
 
     //end of form
