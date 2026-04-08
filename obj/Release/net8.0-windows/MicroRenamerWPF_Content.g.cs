@@ -8,6 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("apikey.txt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("r%20key.ico")]
 
 

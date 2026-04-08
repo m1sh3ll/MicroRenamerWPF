@@ -1,6 +1,6 @@
 ﻿.vs
 bin
 obj
-apiKey.txt
+apikey.txt
 *.env
 secrets.json
