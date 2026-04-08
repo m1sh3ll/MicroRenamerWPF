@@ -1,14 +1,18 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.VisualBasic.FileIO;
+using OpenAI;
+using OpenAI.Assistants;
+using OpenAI.Chat;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
+using System.Buffers.Text;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
+using System.Net.Http;
 using System.Windows;
-
 // ✅ ImageSharp aliases (fix ambiguity issues)
 using ISImage = SixLabors.ImageSharp.Image;
 using ISResizeMode = SixLabors.ImageSharp.Processing.ResizeMode;
@@ -21,19 +25,23 @@ namespace MicroRenamerWPF
   /// </summary>
   public partial class MainWindow : Window
   {
-    private int textMode = 0; // 0 = CAPS, 1 = lower, 2 = Title
+   
     public MainWindow()
     {
       InitializeComponent();
     }
+    private int textMode = 0; // 0 = CAPS, 1 = lower, 2 = Title
+    string downloadsPath;
+    private bool isExpanded = false;
+    private double originalHeight;
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      string downloadsPath = Path.Combine(
+      downloadsPath = Path.Combine(
           Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
           "Downloads"
       );
 
-      txtDirectory1.Text = downloadsPath;
+      
     }
 
     //The RENAME button
@@ -43,21 +51,21 @@ namespace MicroRenamerWPF
 
       if (chkRemoveAllText.IsChecked == true)
       {
-        renameNumbersOnly(txtDirectory1.Text); //remove all text and number each file (Add text in the "add text box" to add text)
+        renameNumbersOnly(downloadsPath); //remove all text and number each file (Add text in the "add text box" to add text)
       }
       if (chkAddDate.IsChecked == true || chkAddText.IsChecked == true)
       {
-        renameWithDateAndText(txtDirectory1.Text);
+        renameWithDateAndText(downloadsPath);
       }
       if (chkRemoveSpecial.IsChecked == true)
       {
-        renameSpecial(txtDirectory1.Text);
+        renameSpecial(downloadsPath);
       }
       if (chkNumberItems.IsChecked == true)
       {
-        renameNumbers(txtDirectory1.Text);
+        renameNumbers(downloadsPath);
       }
-      RenameShortFiles(txtDirectory1.Text);
+      RenameShortFiles(downloadsPath);
 
 
     }
@@ -495,12 +503,12 @@ namespace MicroRenamerWPF
 
     private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
     {
-      renameVB(txtDirectory1.Text);
+      renameVB(downloadsPath);
     }
 
     private void btnRecycleBoth_Click(object sender, RoutedEventArgs e)
     {
-      DeleteFilesInDirectory(txtDirectory1.Text);
+      DeleteFilesInDirectory(downloadsPath);
       DeleteEmptyFoldersInDownloads();
     }
     private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
@@ -583,7 +591,7 @@ namespace MicroRenamerWPF
 
     private void btnUndoDates_Click(object sender, RoutedEventArgs e)
     {
-      RemoveDateFromFiles(txtDirectory1.Text, GetTodaysDate());
+      RemoveDateFromFiles(downloadsPath, GetTodaysDate());
     }
 
     private void RemoveDateFromFiles(string folderPath, string datePrefix)
@@ -629,7 +637,7 @@ namespace MicroRenamerWPF
 
     private void btnTitlesDL_Click(object sender, RoutedEventArgs e)
     {
-      LoadFileNamesToTextBox(txtDirectory1.Text);
+      LoadFileNamesToTextBox(downloadsPath);
     }
     private void LoadFileNamesToTextBox(string folder)
     {
@@ -708,7 +716,7 @@ namespace MicroRenamerWPF
 
     private void btnBullets_DL_Click(object sender, RoutedEventArgs e)
     {
-      LoadHtmlListToTextBox(txtDirectory1.Text);
+      LoadHtmlListToTextBox(downloadsPath);
     }
 
     private void btnCopyNotepad4_Click(object sender, RoutedEventArgs e)
@@ -725,10 +733,7 @@ namespace MicroRenamerWPF
     //btn For the WORD GET
     private void btnGetTitleTextWord_Click(object sender, RoutedEventArgs e)
     {
-      string downloadsPath = Path.Combine(
-  Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-  "Downloads"
-  );
+      
       ExtractAllZipsInDownloads();
 
       string filePath = null;
@@ -803,7 +808,7 @@ namespace MicroRenamerWPF
 
       RenameFiles();
       RenameFiles();
-
+      btnGenerateAltText_Click();
     }
 
     private void DeleteMacOSXFolders(string rootPath)
@@ -844,10 +849,7 @@ namespace MicroRenamerWPF
 
       this.Title += " - Processing...";
 
-      string downloadsPath = Path.Combine(
-      Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-      "Downloads"
-      );
+      
 
       string jpegPath = Path.Combine(downloadsPath, "JPEG");
       if (Directory.Exists(jpegPath))
@@ -1011,10 +1013,7 @@ namespace MicroRenamerWPF
 
     private void DeleteEmptyFoldersInDownloads()
     {
-      string downloadsPath = Path.Combine(
-      Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-      "Downloads"
-      );
+     
 
 
       DeleteEmptyDirectories(downloadsPath);
@@ -1117,10 +1116,7 @@ namespace MicroRenamerWPF
 
     private void ExtractAllZipsInDownloads()
     {
-      string downloadsPath = Path.Combine(
-      Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-      "Downloads"
-      );
+     
 
       var zipFiles = Directory.GetFiles(downloadsPath, "*.zip");
 
@@ -1136,14 +1132,96 @@ namespace MicroRenamerWPF
           Console.WriteLine($"Failed to extract {zip}: {ex.Message}");
         }
       }
+    } //end function
+
+    private async void btnGenerateAltText_Click()
+    {
+      string apiKey = File.Exists("apikey.txt")
+    ? File.ReadAllText("apiKey.txt").Trim()
+    : Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+
+      
+
+      string jpegPath = Path.Combine(downloadsPath, "JPEG");
+
+      if (!Directory.Exists(jpegPath))
+      {
+        MessageBox.Show("JPEG folder not found.");
+        return;
+      }
+
+      var files = Directory.GetFiles(jpegPath, "*.jpg", System.IO.SearchOption.AllDirectories);
+
+      List<string> lines = new List<string>();
+
+      using (var http = new HttpClient())
+      {
+        http.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+
+        foreach (var file in files)
+        {
+          try
+          {
+            byte[] imageBytes = File.ReadAllBytes(file);
+            string base64 = Convert.ToBase64String(imageBytes);
+
+            var requestBody = new
+            {
+              model = "gpt-4o-mini",
+              messages = new object[]
+                {
+                    new {
+                        role = "user",
+                        content = new object[]
+                        {
+                            new { type = "text", text = "Generate a short SEO-friendly alt text for this image." },
+                            new {
+                                type = "image_url",
+                                image_url = new {
+                                    url = $"data:image/jpeg;base64,{base64}"
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            string json = System.Text.Json.JsonSerializer.Serialize(requestBody);
+
+            var response = await http.PostAsync(
+                "https://api.openai.com/v1/chat/completions",
+                new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+            );
+
+            string result = await response.Content.ReadAsStringAsync();
+
+            using var doc = System.Text.Json.JsonDocument.Parse(result);
+            string altText = doc.RootElement
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
+
+            string fileName = Path.GetFileName(file);
+
+            lines.Add($"{fileName}: {altText}");
+          }
+          catch (Exception ex)
+          {
+            lines.Add($"{Path.GetFileName(file)}: ERROR");
+          }
+        }
+      }
+
+      txtNotepad4.Text = string.Join("\r\n", lines);
 
 
     }
 
+    
 
+  }//end of form
 
-
-
-    //end of form
-  }
-}
+}//end namespace
