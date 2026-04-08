@@ -726,10 +726,9 @@ namespace MicroRenamerWPF
       txtNotepad4.Clear();
     }
 
+    //btn For the WORD GET
     private void btnGetTitleTextWord_Click(object sender, RoutedEventArgs e)
     {
-
-      RenameFiles();
 
       string downloadsPath = txtDirectory1.Text;
 
@@ -765,7 +764,7 @@ namespace MicroRenamerWPF
         .ToList();
 
 
-if (paragraphs.Count == 0)
+        if (paragraphs.Count == 0)
           return;
 
         int startIndex = 0;
@@ -799,7 +798,7 @@ if (paragraphs.Count == 0)
             filtered.Skip(titleIndex + 1));
 
 
-}
+      }
 
 
 
@@ -816,9 +815,10 @@ if (paragraphs.Count == 0)
       //shrink images not .heic to 800x600
       ProcessImagesInDownloads();
 
+      RenameFiles();
+      RenameFiles();
+
     }
-
-
 
     private void DeleteMacOSXFolders(string rootPath)
     {
@@ -919,21 +919,20 @@ if (paragraphs.Count == 0)
 
     } //end last function
 
+
+    //Renameing of the short files
     private void RenameShortFiles(string folderPath)
     {
-      //      string downloadsPath = Path.Combine(
-      //Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-      //"Downloads"
-      //);
-
       // Get Word doc filename
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
       string wordFile = Directory.GetFiles(
-          folderPath,
-          "*.docx",
-          System.IO.SearchOption.AllDirectories
+      folderPath,
+      "*.docx",
+      System.IO.SearchOption.AllDirectories
       ).FirstOrDefault();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+
       string wordFileName = null;
 
       if (!string.IsNullOrEmpty(wordFile))
@@ -957,23 +956,27 @@ if (paragraphs.Count == 0)
           string datePart = "";
           string remainder = fileName;
 
-          // ✅ If it starts with a date, separate it
+          // If it starts with a date like 040626-
           if (System.Text.RegularExpressions.Regex.IsMatch(fileName, @"^\d{6}-"))
           {
-            datePart = fileName.Substring(0, 7); // "040626-"
+            datePart = fileName.Substring(0, 7);
             remainder = fileName.Substring(7);
           }
 
           string numberSuffix = "";
 
-          // If remainder is single digit → move it
-          if (remainder.Length == 1 && char.IsDigit(remainder[0]))
+          // ✅ FIXED LOGIC
+          if (string.IsNullOrWhiteSpace(remainder))
           {
-            numberSuffix = remainder;
+            numberSuffix = "0"; // default if nothing after date
           }
-          else if (!string.IsNullOrWhiteSpace(remainder))
+          else if (System.Text.RegularExpressions.Regex.IsMatch(remainder, @"^\d+$"))
           {
-            continue; // skip anything else
+            numberSuffix = remainder; // any length number
+          }
+          else
+          {
+            continue; // skip anything with letters
           }
 
           string baseName = !string.IsNullOrWhiteSpace(wordFileName)
@@ -987,7 +990,7 @@ if (paragraphs.Count == 0)
           int counter = 1;
           while (File.Exists(newPath))
           {
-            newPath = Path.Combine(directory, $"{datePart}{baseName}{numberSuffix}-{counter}{extension}");
+            newPath = Path.Combine(directory, $"{datePart}{baseName}-{numberSuffix}-{counter}{extension}");
             counter++;
           }
 
