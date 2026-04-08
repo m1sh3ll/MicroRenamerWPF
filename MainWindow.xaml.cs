@@ -29,10 +29,12 @@ namespace MicroRenamerWPF
     {
       InitializeComponent();
     }
+
     private int textMode = 0; // 0 = CAPS, 1 = lower, 2 = Title
     string downloadsPath;
     private bool isExpanded = false;
     private double originalHeight;
+
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       downloadsPath = Path.Combine(
@@ -44,25 +46,26 @@ namespace MicroRenamerWPF
     }
 
     //The RENAME button
+    private void btnRename_Click(object sender, RoutedEventArgs e)
+    {
+      RenameFiles();
+    }
     private void RenameFiles()
     {
       this.Title = "Micro Renamer for Windows - Syntax Communications";
 
       if (chkRemoveAllText.IsChecked == true && !string.IsNullOrEmpty(txtRemoveText.Text))
       {
-        renameNumbersOnly(downloadsPath); //remove all text and number each file (Add text in the "add text box" to add text)
+        RenameNumbersOnly(downloadsPath);
       }
-      //if (chkAddDate.IsChecked == true || chkAddText.IsChecked == true)
-      //{
-      //  renameWithDateAndText(downloadsPath);
-      //}
+
       if (chkAddDate.IsChecked == true)
       {
-        AddDate(downloadsPath);
+        RenameAddDate(downloadsPath);
       }
       if (chkAddText.IsChecked == true)
       {
-        AddText(downloadsPath);
+        RenameAddText(downloadsPath);
       }
       if (chkRemoveSpecial.IsChecked == true)
       {
@@ -70,12 +73,12 @@ namespace MicroRenamerWPF
       }
       if (chkNumberItems.IsChecked == true)
       {
-        renameNumbers(downloadsPath);
+        RenameNumbers(downloadsPath);
       }
       RenameShortFiles(downloadsPath);
     }
 
-    private void AddDate(string folder)
+    private void RenameAddDate(string folder)
     {
       string todaysDate = GetTodaysDate();
 
@@ -101,18 +104,68 @@ namespace MicroRenamerWPF
           string newName = todaysDate + nameOnly;
           string newPath = Path.Combine(directory, newName + extension);
 
+          if (file == newPath)
+            continue;
           File.Move(file, newPath);
         }
         catch { }
       }
 
     }
+    private string GetTodaysDate()
+    {
+      return string.Concat(DateTime.Now.Month.ToString("D2"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("yy"), "-");
+    }
+    private void btnUndoDates_Click(object sender, RoutedEventArgs e)
+    {
+      RemoveDateFromFiles(downloadsPath, GetTodaysDate());
+    }
+    private void RemoveDateFromFiles(string folderPath, string datePrefix)
+    {
+      var files = Directory.GetFiles(
+      folderPath,
+      ".",
+      System.IO.SearchOption.AllDirectories
+      );
 
-    private void AddText(string folder)
+      foreach (var file in files)
+      {
+        try
+        {
+          string directory = Path.GetDirectoryName(file);
+          string fileName = Path.GetFileNameWithoutExtension(file);
+          string extension = Path.GetExtension(file);
+
+          // Only remove if filename starts with today's date
+          if (!fileName.StartsWith(datePrefix))
+            continue;
+
+          string newName = fileName.Substring(datePrefix.Length);
+
+          string newPath = Path.Combine(directory, newName + extension);
+
+          int counter = 1;
+          while (File.Exists(newPath))
+          {
+            newPath = Path.Combine(directory, $"{newName}-{counter}{extension}");
+            counter++;
+          }
+
+          File.Move(file, newPath);
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Rename failed: {file} - {ex.Message}");
+        }
+      }
+
+    }
+
+    private void RenameAddText(string folder)
     {
       string textToAdd = txtAddText.Text;
 
-if (string.IsNullOrWhiteSpace(textToAdd))
+      if (string.IsNullOrWhiteSpace(textToAdd))
         return;
 
       var files = Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
@@ -137,18 +190,75 @@ if (string.IsNullOrWhiteSpace(textToAdd))
           newName = newName.Replace("--", "-");
 
           string newPath = Path.Combine(directory, newName + extension);
-
+          if (file == newPath)
+            continue;
           File.Move(file, newPath);
         }
         catch { }
       }
 
 
-}
+    }
 
+    private void RenameNumbers(string folder)
+    {
+      // Check if the directory exists
+      if (Directory.Exists(folder))
+      {
+        // Get all files in the directory
+        string[] files = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
+        int i = 0;
+        // Iterate through each file
+        foreach (string filePath in files)
+        {
 
-    //Rename the files but remove all the text first, rename it with numbers only. not good for subfolders
-    private void renameNumbersOnly(String folder)
+          try
+          {
+            // Extract the file name and fileExtension           
+            string fileExtension = System.IO.Path.GetExtension(filePath);
+            string newFileName = System.IO.Path.GetFileName(filePath);
+            fileExtension = fileExtension.ToLower();
+
+            if (fileExtension != ".pdf" &&
+            fileExtension != ".docx" &&
+            fileExtension != ".doc" &&
+            fileExtension != ".zip")
+            {
+              // Construct the new file name
+              newFileName = string.Concat(newFileName, "-", ++i);
+              newFileName = newFileName.Replace(fileExtension, "");
+              newFileName += fileExtension;
+              newFileName = newFileName.ToLower();
+              newFileName = newFileName.Replace("--", "-");
+
+              //capitalize any main or lead items
+              newFileName = renameMAINLEAD(newFileName);
+
+              // Combine the new file name with the original directory
+              string newFilePath = Path.Combine(Path.GetDirectoryName(filePath), newFileName);
+
+              // Rename the file
+              if (!File.Exists(newFilePath))
+              {
+                File.Move(filePath, newFilePath);
+              }
+            }
+          }
+          catch (Exception ex)
+          {
+            MessageBox.Show($"Error renaming file: {ex.Message}");
+          }
+        }
+      }
+      else
+      {
+        MessageBox.Show("Downloads directory does not exist.");
+      }
+    }
+
+    //Rename the files but remove all the text first,
+    //rename it with numbers only. need fix for subfolders
+    private void RenameNumbersOnly(String folder)
     {
       if (!Directory.Exists(folder))
       {
@@ -188,99 +298,6 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       }
     }
 
-
-    //**
-    //private void renameWithDateAndText(string folder)
-    //{
-    //  string todaysDate = GetTodaysDate();
-    //  string textToAdd = txtAddText.Text;
-
-    //  // Check if the directory exists
-    //  if (System.IO.Directory.Exists(folder))
-    //  {
-    //    // Get all files in the directory
-    //    string[] files = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
-
-    //    // Iterate through each file
-    //    foreach (string filePath in files)
-    //    {
-    //      try
-    //      {
-    //        // Extract the file name and fileExtension           
-    //        string fileExtension = System.IO.Path.GetExtension(filePath);
-    //        fileExtension = fileExtension.ToLower();
-    //        if (fileExtension != ".docx" && fileExtension != ".doc" && fileExtension != ".zip")
-    //        {
-
-
-    //          //Add text if the option is selected
-    //          if (chkAddText.IsChecked == false)
-    //          {
-    //            textToAdd = "";
-    //          }
-
-    //          //Add date if the option is selected
-    //          if (chkAddDate.IsChecked == false)
-    //          {
-    //            todaysDate = "";
-    //          }
-    //          //Checks if the date is already added and won't add the date twice
-    //          string newFileName = string.Concat(todaysDate, textToAdd, "-", System.IO.Path.GetFileName(filePath).Replace(todaysDate, ""));
-
-    //          newFileName = newFileName.ToLower();
-
-    //          // ---------------------------------------***capitalize any main or lead items****
-    //          newFileName = renameMAINLEAD(newFileName);
-
-    //          if (chkRemoveText.IsChecked == true)
-    //          {
-    //            if (txtRemoveText.Text.Length > 0)
-    //            {
-    //              string txtremove = txtRemoveText.Text.ToLower();
-    //              newFileName = newFileName.Replace(txtremove, "");
-    //            }
-    //          }
-    //          // Combine the new file name with the original directory
-    //          string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
-    //          newFilePath = newFilePath.Replace("--", "-");
-    //          // Rename the file
-    //          System.IO.File.Move(filePath, newFilePath);
-    //          chkRemoveAllText.IsChecked = false;
-    //        }
-
-    //      }
-    //      catch (Exception ex)
-    //      {
-    //        MessageBox.Show($"Error renaming file: {ex.Message}");
-    //      }
-    //    }
-    //  }
-    //  else
-    //  {
-    //    MessageBox.Show("Downloads directory does not exist.");
-    //  }
-    //  txtAddText.Clear();
-    //}
-
-
-    // ---------------------------------------***capitalize any main or lead items****
-
-    private string GetTodaysDate()
-    {
-      return string.Concat(DateTime.Now.Month.ToString("D2"), DateTime.Now.ToString("dd"), DateTime.Now.ToString("yy"), "-");
-    }
-    private string renameMAINLEAD(string str)
-    {
-      str = str.Replace("main", "MAIN");
-      str = str.Replace("lead", "LEAD");
-      str = str.Replace("slider", "SLIDER");
-      str = str.Replace("slideshow", "SLIDESHOW");
-      str = str.Replace("cover", "COVER");
-      str = str.Replace("gallery", "GALLERY");
-      str = str.Replace("news", "NEWS");
-      str = str.Replace("feature", "FEATURE");
-      return str;
-    }
     private void renameSpecial(string folder)
     {
 
@@ -393,60 +410,11 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       }
     }
 
-    private void renameNumbers(string folder)
+    private void btnTitleCase_Click(object sender, RoutedEventArgs e)
     {
-      // Check if the directory exists
-      if (System.IO.Directory.Exists(folder))
-      {
-        // Get all files in the directory
-        string[] files = System.IO.Directory.GetFiles(folder, "*", System.IO.SearchOption.AllDirectories);
-        int i = 0;
-        // Iterate through each file
-        foreach (string filePath in files)
-        {
-
-          try
-          {
-            // Extract the file name and fileExtension           
-            string fileExtension = System.IO.Path.GetExtension(filePath);
-            string newFileName = System.IO.Path.GetFileName(filePath);
-            fileExtension = fileExtension.ToLower();
-
-            if (fileExtension != ".pdf" &&
-            fileExtension != ".docx" &&
-            fileExtension != ".doc" &&
-            fileExtension != ".zip")
-            {
-              // Construct the new file name
-              newFileName = string.Concat(newFileName, "-", ++i);
-              newFileName = newFileName.Replace(fileExtension, "");
-              newFileName += fileExtension;
-              newFileName = newFileName.ToLower();
-              newFileName = newFileName.Replace("--", "-");
-
-              //capitalize any main or lead items
-              newFileName = renameMAINLEAD(newFileName);
-
-              // Combine the new file name with the original directory
-              string newFilePath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(filePath), newFileName);
-
-              // Rename the file
-              System.IO.File.Move(filePath, newFilePath);
-            }
-          }
-          catch (Exception ex)
-          {
-            MessageBox.Show($"Error renaming file: {ex.Message}");
-          }
-        }
-      }
-      else
-      {
-        MessageBox.Show("Downloads directory does not exist.");
-      }
+      renameVBTitleCase(downloadsPath);
     }
-
-    private void renameVB(string folder)
+    private void renameVBTitleCase(string folder)
     {
       this.Title = "Micro Renamer for Windows - Syntax Communications";
       string folderPath = folder;
@@ -545,6 +513,108 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       }
     }
 
+    private string renameMAINLEAD(string str)
+    {
+      str = str.Replace("main", "MAIN");
+      str = str.Replace("lead", "LEAD");
+      str = str.Replace("slider", "SLIDER");
+      str = str.Replace("slideshow", "SLIDESHOW");
+      str = str.Replace("cover", "COVER");
+      str = str.Replace("gallery", "GALLERY");
+      str = str.Replace("news", "NEWS");
+      str = str.Replace("feature", "FEATURE");
+      return str;
+    }   
+    private void RenameShortFiles(string folderPath)
+    {
+      // Get Word doc filename
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+      string wordFile = Directory.GetFiles(
+      folderPath,
+      "*.docx",
+      System.IO.SearchOption.AllDirectories
+      ).FirstOrDefault();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+      string wordFileName = null;
+
+      if (!string.IsNullOrEmpty(wordFile))
+      {
+        wordFileName = Path.GetFileNameWithoutExtension(wordFile);
+
+        foreach (char c in Path.GetInvalidFileNameChars())
+          wordFileName = wordFileName.Replace(c.ToString(), "");
+      }
+
+      var files = Directory.GetFiles(folderPath, "*.*", System.IO.SearchOption.AllDirectories);
+
+      foreach (var file in files)
+      {
+        try
+        {
+          string directory = Path.GetDirectoryName(file);
+          string fileName = Path.GetFileNameWithoutExtension(file);
+          string extension = Path.GetExtension(file);
+
+          string datePart = "";
+          string remainder = fileName;
+
+          // If it starts with a date like 040626-
+          if (System.Text.RegularExpressions.Regex.IsMatch(fileName, @"^\d{6}-"))
+          {
+            datePart = fileName.Substring(0, 7);
+            remainder = fileName.Substring(7);
+          }
+
+          string numberSuffix = "";
+
+          // ✅ FIXED LOGIC
+          if (string.IsNullOrWhiteSpace(remainder))
+          {
+            numberSuffix = "0"; // default if nothing after date
+          }
+          else if (System.Text.RegularExpressions.Regex.IsMatch(remainder, @"^\d+$"))
+          {
+            numberSuffix = remainder; // any length number
+          }
+          else
+          {
+            continue; // skip anything with letters
+          }
+
+          string baseName = !string.IsNullOrWhiteSpace(wordFileName)
+              ? wordFileName
+              : "story";
+
+          string newName = datePart + baseName + "-" + numberSuffix;
+
+          string newPath = Path.Combine(directory, newName + extension);
+
+          int counter = 1;
+          while (File.Exists(newPath))
+          {
+            newPath = Path.Combine(directory, $"{datePart}{baseName}-{numberSuffix}-{counter}{extension}");
+            counter++;
+          }
+
+          if (file != newPath)
+          {
+            File.Move(file, newPath);
+          }
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Rename failed: {file} - {ex.Message}");
+        }
+      }
+
+
+    }
+
+    private void btnRecycle_Click(object sender, RoutedEventArgs e)
+    {
+      DeleteFilesInDirectory(downloadsPath);
+      DeleteEmptyFoldersInDownloads();
+    }
     private void DeleteFilesInDirectory(string directoryPath)
     {
       this.Title = "Micro Renamer for Windows - Syntax Communications";
@@ -574,22 +644,68 @@ if (string.IsNullOrWhiteSpace(textToAdd))
         DeleteFilesInDirectory(directoryPath);
       }
     }
-
-    private void btnRenameDir1_Click(object sender, RoutedEventArgs e)
+    private void DeleteEmptyFoldersInDownloads()
     {
-      RenameFiles();
+
+
+
+      DeleteEmptyDirectories(downloadsPath);
+
+
+    }
+    private void DeleteEmptyDirectories(string path)
+    {
+      foreach (var directory in Directory.GetDirectories(path))
+      {
+        // First clean subdirectories
+        DeleteEmptyDirectories(directory);
+
+        // Then check if current directory is empty
+        if (!Directory.EnumerateFileSystemEntries(directory).Any())
+        {
+          try
+          {
+            Directory.Delete(directory);
+          }
+          catch (Exception ex)
+          {
+            Console.WriteLine($"Could not delete {directory}: {ex.Message}");
+          }
+        }
+      }
+    }//end last function
+    private void DeleteMacOSXFolders(string rootPath)
+    {
+      try
+      {
+        var dirs = Directory.GetDirectories(
+            rootPath,
+            "__MACOSX",
+            System.IO.SearchOption.AllDirectories
+        );
+
+        foreach (var dir in dirs)
+        {
+          try
+          {
+            FileSystem.DeleteDirectory(
+                dir,
+                UIOption.OnlyErrorDialogs,
+                RecycleOption.SendToRecycleBin
+            );
+          }
+          catch (Exception ex)
+          {
+            Console.WriteLine($"Failed to delete {dir}: {ex.Message}");
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Error scanning for __MACOSX folders: {ex.Message}");
+      }
     }
 
-    private void btnTitleCaseDir1_Click(object sender, RoutedEventArgs e)
-    {
-      renameVB(downloadsPath);
-    }
-
-    private void btnRecycleBoth_Click(object sender, RoutedEventArgs e)
-    {
-      DeleteFilesInDirectory(downloadsPath);
-      DeleteEmptyFoldersInDownloads();
-    }
     private void btnCopyNotepad1_Click(object sender, RoutedEventArgs e)
     {
       txtNotepad1.SelectAll();
@@ -605,11 +721,29 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       txtNotepad3.SelectAll();
       txtNotepad3.Copy();
     }
+    private void btnCopyNotepad4_Click(object sender, RoutedEventArgs e)
+    {
+      txtNotepad4.SelectAll();
+      txtNotepad4.Copy();
+    }
+
+
+    private void btnCopyPresetClipboard0_Click(object sender, RoutedEventArgs e)
+    {
+      txtPresetClipboard0.SelectAll();
+      txtPresetClipboard0.Copy();
+    }
     private void btnCopyPresetClipboard1_Click(object sender, RoutedEventArgs e)
     {
       //copy the text in the box 1 to the clipboard
       txtPresetClipboard1.SelectAll();
       txtPresetClipboard1.Copy();
+    }
+    private void btnCopyPresetClipboard2_Click(object sender, RoutedEventArgs e)
+    {
+      //copy the text in the box 2 to the clipboard
+      txtPresetClipboard2.SelectAll();
+      txtPresetClipboard2.Copy();
     }
     private void btnCopyPresetClipboard3_Click(object sender, RoutedEventArgs e)
     {
@@ -623,194 +757,43 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       txtPresetClipboard4.SelectAll();
       txtPresetClipboard4.Copy();
     }
-    private void btnCopyPresetClipboard2_Click(object sender, RoutedEventArgs e)
-    {
-      //copy the text in the box 2 to the clipboard
-      txtPresetClipboard2.SelectAll();
-      txtPresetClipboard2.Copy();
-    }
+
     private void btnPasteNotepad1_Click(object sender, RoutedEventArgs e)
     {
       string cb = Clipboard.GetText();
       txtNotepad1.Text = cb;
     }
-
     private void btnPasteNotepad2_Click(object sender, RoutedEventArgs e)
     {
       string cb = Clipboard.GetText();
       txtNotepad2.Text = cb;
     }
-
-    private void btnClearNotepad1_Click(object sender, RoutedEventArgs e)
-    {
-      txtNotepad1.Clear();
-    }
-
-    private void btnClearNotepad2_Click(object sender, RoutedEventArgs e)
-    {
-      txtNotepad2.Clear();
-    }
-
-    private void btnCopyPresetClipboard0_Click(object sender, RoutedEventArgs e)
-    {
-      txtPresetClipboard0.SelectAll();
-      txtPresetClipboard0.Copy();
-    }
-
     private void btnPasteNotepad3_Click(object sender, RoutedEventArgs e)
     {
 
       string cb = Clipboard.GetText();
       txtNotepad3.Text = cb;
     }
+
+    private void btnClearNotepad1_Click(object sender, RoutedEventArgs e)
+    {
+      txtNotepad1.Clear();
+    }
+    private void btnClearNotepad2_Click(object sender, RoutedEventArgs e)
+    {
+      txtNotepad2.Clear();
+    }
     private void btnClearNotepad3_Click(object sender, RoutedEventArgs e)
     {
       txtNotepad3.Clear();
     }
-
-    private void btnUndoDates_Click(object sender, RoutedEventArgs e)
-    {
-      RemoveDateFromFiles(downloadsPath, GetTodaysDate());
-    }
-
-    private void RemoveDateFromFiles(string folderPath, string datePrefix)
-    {
-      var files = Directory.GetFiles(
-      folderPath,
-      ".",
-      System.IO.SearchOption.AllDirectories
-      );
-
-      foreach (var file in files)
-      {
-        try
-        {
-          string directory = Path.GetDirectoryName(file);
-          string fileName = Path.GetFileNameWithoutExtension(file);
-          string extension = Path.GetExtension(file);
-
-          // Only remove if filename starts with today's date
-          if (!fileName.StartsWith(datePrefix))
-            continue;
-
-          string newName = fileName.Substring(datePrefix.Length);
-
-          string newPath = Path.Combine(directory, newName + extension);
-
-          int counter = 1;
-          while (File.Exists(newPath))
-          {
-            newPath = Path.Combine(directory, $"{newName}-{counter}{extension}");
-            counter++;
-          }
-
-          File.Move(file, newPath);
-        }
-        catch (Exception ex)
-        {
-          Console.WriteLine($"Rename failed: {file} - {ex.Message}");
-        }
-      }
-
-    }
-
-    private void btnTitlesDL_Click(object sender, RoutedEventArgs e)
-    {
-      LoadFileNamesToTextBox(downloadsPath);
-    }
-    private void LoadFileNamesToTextBox(string folder)
-    {
-
-
-      if (!Directory.Exists(folder))
-      {
-        MessageBox.Show("Directory does not exist.");
-        return;
-      }
-
-      var textInfo = CultureInfo.CurrentCulture.TextInfo;
-
-      var fileNames = Directory.GetFiles(folder)
-                               .OrderBy(f => f)
-                               .Select(file =>
-                               {
-                                 string name = Path.GetFileNameWithoutExtension(file);
-                                 name = name.Replace(GetTodaysDate(), "");
-                                 // Clean + Title Case
-                                 name = name.Replace("_", " ")
-                                          .Replace("-", " ");
-
-                                 name = textInfo.ToTitleCase(name.ToLower());
-
-
-                                 return name;
-                               });
-
-      txtNotepad4.Text = string.Join(Environment.NewLine, fileNames);
-    }
-    private void LoadHtmlListToTextBox(string folder)
-    {
-      if (!Directory.Exists(folder))
-      {
-        MessageBox.Show("Directory does not exist.");
-        return;
-      }
-
-      var textInfo = CultureInfo.CurrentCulture.TextInfo;
-
-      var listItems = Directory.GetFiles(folder)
-                               .OrderBy(f => f)
-                               .Select(file =>
-                               {
-                                 string name = Path.GetFileNameWithoutExtension(file);
-
-                                 // Remove today's date
-                                 string today = GetTodaysDate();
-                                 if (!string.IsNullOrEmpty(today))
-                                   name = name.Replace(today, "");
-
-                                 // Clean separators
-                                 name = name.Replace("_", " ")
-                                          .Replace("-", " ");
-
-                                 // Remove extra spaces
-                                 name = string.Join(" ", name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
-
-                                 // Title Case
-                                 name = textInfo.ToTitleCase(name.ToLower());
-
-                                 // Convert to HTML-safe text
-                                 name = System.Net.WebUtility.HtmlEncode(name);
-
-                                 return $"  <li>{name}</li>";
-                               });
-
-      string html =
-          "<ul>\r\n" +
-          string.Join("\r\n", listItems) +
-          "\r\n</ul>";
-
-      txtNotepad4.Text = html;
-    }
-
-    private void btnBullets_DL_Click(object sender, RoutedEventArgs e)
-    {
-      LoadHtmlListToTextBox(downloadsPath);
-    }
-
-    private void btnCopyNotepad4_Click(object sender, RoutedEventArgs e)
-    {
-      txtNotepad4.SelectAll();
-      txtNotepad4.Copy();
-    }
-
     private void btnClearNotepad4_Click(object sender, RoutedEventArgs e)
     {
       txtNotepad4.Clear();
     }
 
     //btn For the WORD GET TITLE TEXT
-    private async void btnGetTitleTextWord_Click(object sender, RoutedEventArgs e)
+    private async void GetTitleTextWord_Click(object sender, RoutedEventArgs e)
     {
 
       ExtractAllZipsInDownloads();
@@ -889,39 +872,36 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       RenameFiles();
       await GenerateAltText();
     }
-
-    private void DeleteMacOSXFolders(string rootPath)
+    private void SplitTextboxContent()
     {
-      try
-      {
-        var dirs = Directory.GetDirectories(
-            rootPath,
-            "__MACOSX",
-            System.IO.SearchOption.AllDirectories
-        );
+      var lines = txtNotepad2.Text
+      .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
+      .Select(l => l.Trim())
+      .Where(l => !string.IsNullOrWhiteSpace(l))
+      .ToList();
 
-        foreach (var dir in dirs)
-        {
-          try
-          {
-            FileSystem.DeleteDirectory(
-                dir,
-                UIOption.OnlyErrorDialogs,
-                RecycleOption.SendToRecycleBin
-            );
-          }
-          catch (Exception ex)
-          {
-            Console.WriteLine($"Failed to delete {dir}: {ex.Message}");
-          }
-        }
-      }
-      catch (Exception ex)
-      {
-        Console.WriteLine($"Error scanning for __MACOSX folders: {ex.Message}");
-      }
+
+      if (lines.Count == 0)
+        return;
+
+      int titleIndex = lines.FindIndex(l =>
+          l.Length > 20 &&                                // real sentence
+          !l.Contains("@") &&                             // not email
+          !l.Contains("www.") &&                          // not website
+          !l.ToUpper().Equals(l) &&                       // not ALL CAPS
+          !System.Text.RegularExpressions.Regex.IsMatch(l, @"^\d+$") // not numbers
+      );
+
+      if (titleIndex == -1)
+        titleIndex = 0;
+
+      txtNotepad1.Text = lines[titleIndex];
+
+      txtNotepad2.Text = string.Join(Environment.NewLine,
+          lines.Skip(titleIndex + 1));
+
+
     }
-
     private void ProcessImagesInDownloads()
     {
       this.Title = "Micro Renamer for Windows - Syntax Communications";
@@ -1000,219 +980,6 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       this.Title += " - Processing Complete...";
 
     } //end last function
-
-
-    //Renameing of the short files
-    private void RenameShortFiles(string folderPath)
-    {
-      // Get Word doc filename
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-      string wordFile = Directory.GetFiles(
-      folderPath,
-      "*.docx",
-      System.IO.SearchOption.AllDirectories
-      ).FirstOrDefault();
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
-
-
-      string wordFileName = null;
-
-      if (!string.IsNullOrEmpty(wordFile))
-      {
-        wordFileName = Path.GetFileNameWithoutExtension(wordFile);
-
-        foreach (char c in Path.GetInvalidFileNameChars())
-          wordFileName = wordFileName.Replace(c.ToString(), "");
-      }
-
-      var files = Directory.GetFiles(folderPath, "*.*", System.IO.SearchOption.AllDirectories);
-
-      foreach (var file in files)
-      {
-        try
-        {
-          string directory = Path.GetDirectoryName(file);
-          string fileName = Path.GetFileNameWithoutExtension(file);
-          string extension = Path.GetExtension(file);
-
-          string datePart = "";
-          string remainder = fileName;
-
-          // If it starts with a date like 040626-
-          if (System.Text.RegularExpressions.Regex.IsMatch(fileName, @"^\d{6}-"))
-          {
-            datePart = fileName.Substring(0, 7);
-            remainder = fileName.Substring(7);
-          }
-
-          string numberSuffix = "";
-
-          // ✅ FIXED LOGIC
-          if (string.IsNullOrWhiteSpace(remainder))
-          {
-            numberSuffix = "0"; // default if nothing after date
-          }
-          else if (System.Text.RegularExpressions.Regex.IsMatch(remainder, @"^\d+$"))
-          {
-            numberSuffix = remainder; // any length number
-          }
-          else
-          {
-            continue; // skip anything with letters
-          }
-
-          string baseName = !string.IsNullOrWhiteSpace(wordFileName)
-              ? wordFileName
-              : "story";
-
-          string newName = datePart + baseName + "-" + numberSuffix;
-
-          string newPath = Path.Combine(directory, newName + extension);
-
-          int counter = 1;
-          while (File.Exists(newPath))
-          {
-            newPath = Path.Combine(directory, $"{datePart}{baseName}-{numberSuffix}-{counter}{extension}");
-            counter++;
-          }
-
-          if (file != newPath)
-          {
-            File.Move(file, newPath);
-          }
-        }
-        catch (Exception ex)
-        {
-          Console.WriteLine($"Rename failed: {file} - {ex.Message}");
-        }
-      }
-
-
-    }
-
-    private void DeleteEmptyFoldersInDownloads()
-    {
-
-
-
-      DeleteEmptyDirectories(downloadsPath);
-
-
-    }
-
-    private void DeleteEmptyDirectories(string path)
-    {
-      foreach (var directory in Directory.GetDirectories(path))
-      {
-        // First clean subdirectories
-        DeleteEmptyDirectories(directory);
-
-        // Then check if current directory is empty
-        if (!Directory.EnumerateFileSystemEntries(directory).Any())
-        {
-          try
-          {
-            Directory.Delete(directory);
-          }
-          catch (Exception ex)
-          {
-            Console.WriteLine($"Could not delete {directory}: {ex.Message}");
-          }
-        }
-      }
-    }//end last function
-
-    private void btnCAPS_Click(object sender, RoutedEventArgs e)
-    {
-      if (textMode == 0)
-      {
-        // CAPS
-        txtNotepad4.Text = txtNotepad4.Text.ToUpper();
-        btnCAPS.Content = "lower";
-        textMode = 1;
-      }
-      else if (textMode == 1)
-      {
-        // lower
-        txtNotepad4.Text = txtNotepad4.Text.ToLower();
-        btnCAPS.Content = "Title";
-        textMode = 2;
-      }
-      else
-      {
-        // Title Case
-        var textInfo = CultureInfo.CurrentCulture.TextInfo;
-        txtNotepad4.Text = textInfo.ToTitleCase(txtNotepad4.Text.ToLower());
-
-        btnCAPS.Content = "CAPS";
-        textMode = 0;
-      }
-    }
-
-    private void SplitTextboxContent()
-    {
-      var lines = txtNotepad2.Text
-      .Split(new[] { "\r\n", "\n" }, StringSplitOptions.None)
-      .Select(l => l.Trim())
-      .Where(l => !string.IsNullOrWhiteSpace(l))
-      .ToList();
-
-
-      if (lines.Count == 0)
-        return;
-
-      int titleIndex = lines.FindIndex(l =>
-          l.Length > 20 &&                                // real sentence
-          !l.Contains("@") &&                             // not email
-          !l.Contains("www.") &&                          // not website
-          !l.ToUpper().Equals(l) &&                       // not ALL CAPS
-          !System.Text.RegularExpressions.Regex.IsMatch(l, @"^\d+$") // not numbers
-      );
-
-      if (titleIndex == -1)
-        titleIndex = 0;
-
-      txtNotepad1.Text = lines[titleIndex];
-
-      txtNotepad2.Text = string.Join(Environment.NewLine,
-          lines.Skip(titleIndex + 1));
-
-
-    }
-
-    private void btnGetBullet_Click(object sender, RoutedEventArgs e)
-    {
-      string link = txtHTMLLink.Text.Trim();
-      string text = txtHTMLText.Text.Trim();
-
-      if (string.IsNullOrWhiteSpace(link) || string.IsNullOrWhiteSpace(text))
-        return;
-
-      string html = $"<li><a href=\"{link}\">{text}</a></li>";
-
-      txtNotepad4.Text = html;
-    }
-
-    private void ExtractAllZipsInDownloads()
-    {
-
-
-      var zipFiles = Directory.GetFiles(downloadsPath, "*.zip");
-
-      foreach (var zip in zipFiles)
-      {
-        try
-        {
-          // Extract to same folder
-          ZipFile.ExtractToDirectory(zip, downloadsPath, true);
-        }
-        catch (Exception ex)
-        {
-          Console.WriteLine($"Failed to extract {zip}: {ex.Message}");
-        }
-      }
-    } //end function
-
     private async Task GenerateAltText()
     {
       string apiKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "apikey.txt");
@@ -1289,6 +1056,8 @@ if (string.IsNullOrWhiteSpace(textToAdd))
                 .GetProperty("content")
                 .GetString();
 
+            altText = altText.Trim().Trim('"');
+
             string fileName = Path.GetFileName(file);
 
             lines.Add(fileName);
@@ -1305,8 +1074,146 @@ if (string.IsNullOrWhiteSpace(textToAdd))
       txtNotepad4.Text = string.Join("\r\n", lines);
 
     }
+    private void ExtractAllZipsInDownloads()
+    {
 
 
+      var zipFiles = Directory.GetFiles(downloadsPath, "*.zip");
+
+      foreach (var zip in zipFiles)
+      {
+        try
+        {
+          // Extract to same folder
+          ZipFile.ExtractToDirectory(zip, downloadsPath, true);
+        }
+        catch (Exception ex)
+        {
+          Console.WriteLine($"Failed to extract {zip}: {ex.Message}");
+        }
+      }
+    } //end function
+
+    private void btnCAPS_Click(object sender, RoutedEventArgs e)
+    {
+      if (textMode == 0)
+      {
+        // CAPS
+        txtNotepad4.Text = txtNotepad4.Text.ToUpper();
+        btnCAPS.Content = "lower";
+        textMode = 1;
+      }
+      else if (textMode == 1)
+      {
+        // lower
+        txtNotepad4.Text = txtNotepad4.Text.ToLower();
+        btnCAPS.Content = "Title";
+        textMode = 2;
+      }
+      else
+      {
+        // Title Case
+        var textInfo = CultureInfo.CurrentCulture.TextInfo;
+        txtNotepad4.Text = textInfo.ToTitleCase(txtNotepad4.Text.ToLower());
+
+        btnCAPS.Content = "CAPS";
+        textMode = 0;
+      }
+    }
+    private void btnGetBullet_Click(object sender, RoutedEventArgs e)
+    {
+      string link = txtHTMLLink.Text.Trim();
+      string text = txtHTMLText.Text.Trim();
+
+      if (string.IsNullOrWhiteSpace(link) || string.IsNullOrWhiteSpace(text))
+        return;
+
+      string html = $"<li><a href=\"{link}\">{text}</a></li>";
+
+      txtNotepad4.Text = html;
+    }
+    private void btnBullets_DL_Click(object sender, RoutedEventArgs e)
+    {
+      LoadHtmlListToTextBox(downloadsPath);
+    }
+    private void btnTitlesDL_Click(object sender, RoutedEventArgs e)
+    {
+      LoadFileNamesToTextBox(downloadsPath);
+    }
+    private void LoadFileNamesToTextBox(string folder)
+    {
+
+
+      if (!Directory.Exists(folder))
+      {
+        MessageBox.Show("Directory does not exist.");
+        return;
+      }
+
+      var textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+      var fileNames = Directory.GetFiles(folder)
+                               .OrderBy(f => f)
+                               .Select(file =>
+                               {
+                                 string name = Path.GetFileNameWithoutExtension(file);
+                                 name = name.Replace(GetTodaysDate(), "");
+                                 // Clean + Title Case
+                                 name = name.Replace("_", " ")
+                                          .Replace("-", " ");
+
+                                 name = textInfo.ToTitleCase(name.ToLower());
+
+
+                                 return name;
+                               });
+
+      txtNotepad4.Text = string.Join(Environment.NewLine, fileNames);
+    }
+    private void LoadHtmlListToTextBox(string folder)
+    {
+      if (!Directory.Exists(folder))
+      {
+        MessageBox.Show("Directory does not exist.");
+        return;
+      }
+
+      var textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+      var listItems = Directory.GetFiles(folder)
+                               .OrderBy(f => f)
+                               .Select(file =>
+                               {
+                                 string name = Path.GetFileNameWithoutExtension(file);
+
+                                 // Remove today's date
+                                 string today = GetTodaysDate();
+                                 if (!string.IsNullOrEmpty(today))
+                                   name = name.Replace(today, "");
+
+                                 // Clean separators
+                                 name = name.Replace("_", " ")
+                                          .Replace("-", " ");
+
+                                 // Remove extra spaces
+                                 name = string.Join(" ", name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries));
+
+                                 // Title Case
+                                 name = textInfo.ToTitleCase(name.ToLower());
+
+                                 // Convert to HTML-safe text
+                                 name = System.Net.WebUtility.HtmlEncode(name);
+
+                                 return $"  <li>{name}</li>";
+                               });
+
+      string html =
+          "<ul>\r\n" +
+          string.Join("\r\n", listItems) +
+          "\r\n</ul>";
+
+      txtNotepad4.Text = html;
+    }
 
   }//end of form
 

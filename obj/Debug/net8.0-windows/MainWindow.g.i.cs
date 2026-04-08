@@ -501,7 +501,7 @@ namespace MicroRenamerWPF {
             this.btnRecycleBoth = ((System.Windows.Controls.Button)(target));
             
             #line 43 "..\..\..\MainWindow.xaml"
-            this.btnRecycleBoth.Click += new System.Windows.RoutedEventHandler(this.btnRecycleBoth_Click);
+            this.btnRecycleBoth.Click += new System.Windows.RoutedEventHandler(this.btnRecycle_Click);
             
             #line default
             #line hidden
@@ -510,7 +510,7 @@ namespace MicroRenamerWPF {
             this.btnRenameDir1 = ((System.Windows.Controls.Button)(target));
             
             #line 44 "..\..\..\MainWindow.xaml"
-            this.btnRenameDir1.Click += new System.Windows.RoutedEventHandler(this.btnRenameDir1_Click);
+            this.btnRenameDir1.Click += new System.Windows.RoutedEventHandler(this.btnRename_Click);
             
             #line default
             #line hidden
@@ -519,7 +519,7 @@ namespace MicroRenamerWPF {
             this.btnTitleCaseDir1 = ((System.Windows.Controls.Button)(target));
             
             #line 45 "..\..\..\MainWindow.xaml"
-            this.btnTitleCaseDir1.Click += new System.Windows.RoutedEventHandler(this.btnTitleCaseDir1_Click);
+            this.btnTitleCaseDir1.Click += new System.Windows.RoutedEventHandler(this.btnTitleCase_Click);
             
             #line default
             #line hidden
@@ -729,7 +729,7 @@ namespace MicroRenamerWPF {
             this.btnGetTitleTextWord = ((System.Windows.Controls.Button)(target));
             
             #line 78 "..\..\..\MainWindow.xaml"
-            this.btnGetTitleTextWord.Click += new System.Windows.RoutedEventHandler(this.btnGetTitleTextWord_Click);
+            this.btnGetTitleTextWord.Click += new System.Windows.RoutedEventHandler(this.GetTitleTextWord_Click);
             
             #line default
             #line hidden
