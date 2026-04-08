@@ -1,17 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.VisualBasic.FileIO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using static System.Net.Mime.MediaTypeNames;
 
 // ✅ ImageSharp aliases (fix ambiguity issues)
 using ISImage = SixLabors.ImageSharp.Image;
@@ -863,7 +858,22 @@ namespace MicroRenamerWPF
       "Downloads"
       );
 
-      string outputRoot = Path.Combine(downloadsPath, "JPEG");
+      string jpegPath = Path.Combine(downloadsPath, "JPEG");
+      if (Directory.Exists(jpegPath))
+      {
+        try
+        {
+          FileSystem.DeleteDirectory(
+              jpegPath,
+              UIOption.OnlyErrorDialogs,
+              RecycleOption.SendToRecycleBin
+          );
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show($"Could not delete folder: {ex.Message}");
+        }
+      }
 
 
       // 🚫 Check for HEIC files first
@@ -898,7 +908,7 @@ namespace MicroRenamerWPF
             }));
 
             string relativePath = Path.GetRelativePath(downloadsPath, inputPath);
-            string outputPath = Path.Combine(outputRoot, Path.ChangeExtension(relativePath, ".jpg"));
+            string outputPath = Path.Combine(jpegPath, Path.ChangeExtension(relativePath, ".jpg"));
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
 
             image.Save(outputPath, new JpegEncoder
@@ -1112,6 +1122,37 @@ namespace MicroRenamerWPF
       string html = $"<li><a href=\"{link}\">{text}</a></li>";
 
       txtNotepad4.Text = html;
+    }
+
+
+
+    private void DeleteJPEGFolder()
+    {
+      string downloadsPath = Path.Combine(
+      Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+      "Downloads"
+      );
+
+
+      string jpegPath = Path.Combine(downloadsPath, "JPEG");
+
+      if (Directory.Exists(jpegPath))
+      {
+        try
+        {
+          FileSystem.DeleteDirectory(
+              jpegPath,
+              UIOption.OnlyErrorDialogs,
+              RecycleOption.SendToRecycleBin
+          );
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show($"Could not delete folder: {ex.Message}");
+        }
+      }
+
+
     }
 
 
