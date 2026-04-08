@@ -750,64 +750,51 @@ namespace MicroRenamerWPF
 
       if (filePath == null)
       {
-        MessageBox.Show("No Word documents found.");
-        return;
+        txtNotepad1.Text = "";
+        txtNotepad2.Text = "";
       }
-
-      using (WordprocessingDocument doc = WordprocessingDocument.Open(filePath, false))
+      else
       {
-        var paragraphs = doc.MainDocumentPart.Document.Body
-        .Elements<Paragraph>()
-        .Select(p => p.InnerText.Trim())
-        .Where(p => !string.IsNullOrWhiteSpace(p))
-        .ToList();
-
-
-        if (paragraphs.Count == 0)
-          return;
-
-        int startIndex = 0;
-
-        // 🥇 Try to find syntaxny.com anchor
-        int syntaxIndex = paragraphs.FindIndex(p => p.ToLower().Contains("syntaxny.com"));
-
-        if (syntaxIndex != -1)
+        using (WordprocessingDocument doc = WordprocessingDocument.Open(filePath, false))
         {
-          startIndex = syntaxIndex + 1;
+          var paragraphs = doc.MainDocumentPart.Document.Body
+              .Elements<Paragraph>()
+              .Select(p => p.InnerText.Trim())
+              .Where(p => !string.IsNullOrWhiteSpace(p))
+              .ToList();
+
+          if (paragraphs.Count > 0)
+          {
+            int startIndex = 0;
+
+            int syntaxIndex = paragraphs.FindIndex(p => p.ToLower().Contains("syntaxny.com"));
+            if (syntaxIndex != -1)
+              startIndex = syntaxIndex + 1;
+
+            var filtered = paragraphs.Skip(startIndex).ToList();
+
+            int titleIndex = filtered.FindIndex(p =>
+                p.Length > 20 &&
+                !p.Contains("@") &&
+                !p.Contains("www.") &&
+                !p.ToUpper().Equals(p) &&
+                !System.Text.RegularExpressions.Regex.IsMatch(p, @"^\d")
+            );
+
+            if (titleIndex == -1)
+              titleIndex = 0;
+
+            txtNotepad1.Text = filtered[titleIndex];
+            txtNotepad2.Text = string.Join(Environment.NewLine, filtered.Skip(titleIndex + 1));
+          }
         }
-
-        // Work from filtered list
-        var filtered = paragraphs.Skip(startIndex).ToList();
-
-        // 🥇/🥈 Find first real title
-        int titleIndex = filtered.FindIndex(p =>
-            p.Length > 20 &&                              // real sentence
-            !p.Contains("@") &&                           // not email
-            !p.Contains("www.") &&                        // not website
-            !p.ToUpper().Equals(p) &&                     // not ALL CAPS
-            !System.Text.RegularExpressions.Regex.IsMatch(p, @"^\d") // not numeric start
-        );
-
-        if (titleIndex == -1)
-          titleIndex = 0;
-
-        txtNotepad1.Text = filtered[titleIndex];
-
-        txtNotepad2.Text = string.Join(Environment.NewLine,
-            filtered.Skip(titleIndex + 1));
-
-
       }
-
-
 
       //sometimes files contain the press release date + other info
       if (txtNotepad2.Text.Contains("syntaxny"))
       {
         SplitTextboxContent();
       }
-
-
       //if AE sends MacOS files. 
       DeleteMacOSXFolders(downloadsPath);
 
